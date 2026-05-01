@@ -73,3 +73,8 @@ x64/
 *.pdb
 *.db
 *.db-journal
+
+db/*.db
+db/*.db-journal
+db/*.db-shm
+db/*.db-wal
