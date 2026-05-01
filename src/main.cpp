@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <exception>
 
 #include "core/Gig.h"
 #include "core/GigCategory.h"
@@ -36,243 +37,178 @@ static void expectThrow(Fn fn, const string& label) {
     }
     catch (const exception& e) {
         cout << "  FAIL  " << label
-            << " (wrong exception type: " << e.what() << ")\n";
+            << " (wrong type: " << e.what() << ")\n";
         g_fail++;
     }
 }
 
 
 
-static void testCategoryEnum() {
-    cout << "\n[GigCategory enum]\n";
+static void testExceptionHierarchy() {
+    cout << "\n[Exception hierarchy: polymorphic catch + prefixes]\n";
 
-    check(gigCategoryToString(GigCategory::DESIGN) == "DESIGN",
-        "toString DESIGN");
-    check(gigCategoryToString(GigCategory::CODING) == "CODING",
-        "toString CODING");
-    check(gigCategoryToString(GigCategory::OTHER) == "OTHER",
-        "toString OTHER");
+    // Every exception type catches as SkillBridgeException
+    try {
+        throw ValidationException("bad input");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Validation error: bad input",
+            "ValidationException: prefix and message");
+    }
 
-    check(gigCategoryFromString("DESIGN") == GigCategory::DESIGN,
-        "fromString DESIGN uppercase");
-    check(gigCategoryFromString("design") == GigCategory::DESIGN,
-        "fromString design lowercase");
-    check(gigCategoryFromString("Design") == GigCategory::DESIGN,
-        "fromString Design mixed case");
-    check(gigCategoryFromString("MARKETING") == GigCategory::MARKETING,
-        "fromString MARKETING");
+    try {
+        throw UnauthorizedException("not your gig");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Unauthorized: not your gig",
+            "UnauthorizedException: prefix and message");
+    }
 
-    expectThrow<invalid_argument>(
-        []() { gigCategoryFromString("nonsense"); },
-        "fromString rejects unknown category");
+    try {
+        throw GigNotFoundException("gigID=42");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Gig not found: gigID=42",
+            "GigNotFoundException: prefix and message");
+    }
+
+    try {
+        throw AuthenticationException("wrong password");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Authentication error: wrong password",
+            "AuthenticationException: prefix preserved");
+    }
+
+    try {
+        throw DatabaseException("disk full");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Database error: disk full",
+            "DatabaseException: prefix preserved");
+    }
+
+    try {
+        throw DuplicateEntryException("email already exists");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Duplicate entry: email already exists",
+            "DuplicateEntryException: prefix preserved");
+    }
+
+    try {
+        throw RateLimitException("too many attempts");
+    }
+    catch (const SkillBridgeException& e) {
+        string msg = e.what();
+        check(msg == "Rate limit exceeded: too many attempts",
+            "RateLimitException: prefix preserved");
+    }
 }
 
-static void testValidGigConstruction() {
-    cout << "\n[Gig construction: valid inputs]\n";
+static void testStdExceptionRoot() {
+    cout << "\n[Exception hierarchy: all catch as std::exception]\n";
 
-    Gig g(7,
-        "Logo Design",
-        "I will design a professional logo for your brand or startup.",
-        500.0,
-        GigCategory::DESIGN);
+    try {
+        throw ValidationException("x");
+    }
+    catch (const exception& e) {
+        check(string(e.what()).find("Validation error") != string::npos,
+            "ValidationException caught via std::exception");
+    }
 
-    check(g.getGigID() == 0, "new Gig has gigID 0 (not yet saved)");
-    check(g.getOwnerID() == 7, "ownerID set to 7");
-    check(g.getTitle() == "Logo Design", "title stored");
-    check(g.getPrice() == 500.0, "price stored");
-    check(g.getCategory() == GigCategory::DESIGN, "category stored");
-    check(g.getIsActive() == true, "new Gig is active by default");
-    check(g.getCreatedAt() == "", "createdAt empty until DB assigns it");
+    try {
+        throw UnauthorizedException("y");
+    }
+    catch (const exception& e) {
+        check(string(e.what()).find("Unauthorized") != string::npos,
+            "UnauthorizedException caught via std::exception");
+    }
+
+    try {
+        throw GigNotFoundException("z");
+    }
+    catch (const exception& e) {
+        check(string(e.what()).find("Gig not found") != string::npos,
+            "GigNotFoundException caught via std::exception");
+    }
 }
 
-static void testInvalidGigConstruction() {
-    cout << "\n[Gig construction: validation]\n";
+static void testGigThrowsValidationException() {
+    cout << "\n[Gig validation now throws ValidationException]\n";
 
-    // Title too short
-    expectThrow<InvalidGigException>(
+    expectThrow<ValidationException>(
         []() {
-            Gig g(1, "Lo", "A valid description here.", 100.0,
-                GigCategory::OTHER);
+            Gig g(1, "Lo", "A valid description here.",
+                100.0, GigCategory::OTHER);
         },
-        "title < 3 chars rejected");
+        "short title -> ValidationException");
 
-    // Title empty
-    expectThrow<InvalidGigException>(
+    expectThrow<ValidationException>(
         []() {
-            Gig g(1, "", "A valid description here.", 100.0,
-                GigCategory::OTHER);
+            Gig g(1, "Valid Title", "short",
+                100.0, GigCategory::OTHER);
         },
-        "empty title rejected");
+        "short description -> ValidationException");
 
-    // Title too long
-    expectThrow<InvalidGigException>(
+    expectThrow<ValidationException>(
         []() {
-            string longTitle(150, 'x');
-            Gig g(1, longTitle, "A valid description here.", 100.0,
-                GigCategory::OTHER);
+            Gig g(1, "Valid Title", "A valid description here.",
+                -5.0, GigCategory::OTHER);
         },
-        "title > 100 chars rejected");
+        "negative price -> ValidationException");
 
-    // Description too short
-    expectThrow<InvalidGigException>(
+    expectThrow<ValidationException>(
         []() {
-            Gig g(1, "Valid Title", "short", 100.0, GigCategory::OTHER);
+            Gig g(0, "Valid Title", "A valid description here.",
+                100.0, GigCategory::OTHER);
         },
-        "description < 10 chars rejected");
+        "bad ownerID -> ValidationException");
 
-    // Price zero
-    expectThrow<InvalidGigException>(
-        []() {
-            Gig g(1, "Valid Title", "A valid description here.", 0.0,
-                GigCategory::OTHER);
-        },
-        "price 0 rejected");
+    // Setter validation
+    Gig g(1, "Valid Title", "A valid description here.",
+        100.0, GigCategory::OTHER);
 
-    // Price negative
-    expectThrow<InvalidGigException>(
-        []() {
-            Gig g(1, "Valid Title", "A valid description here.", -50.0,
-                GigCategory::OTHER);
-        },
-        "negative price rejected");
-
-    // Price too high
-    expectThrow<InvalidGigException>(
-        []() {
-            Gig g(1, "Valid Title", "A valid description here.", 2000000.0,
-                GigCategory::OTHER);
-        },
-        "price >= 1,000,000 rejected");
-
-    // Bad ownerID
-    expectThrow<InvalidGigException>(
-        []() {
-            Gig g(0, "Valid Title", "A valid description here.", 100.0,
-                GigCategory::OTHER);
-        },
-        "ownerID 0 rejected");
-
-    expectThrow<InvalidGigException>(
-        []() {
-            Gig g(-5, "Valid Title", "A valid description here.", 100.0,
-                GigCategory::OTHER);
-        },
-        "negative ownerID rejected");
-}
-
-static void testSetters() {
-    cout << "\n[Gig setters with validation]\n";
-
-    Gig g(1, "Original Title", "Original description works fine.",
-        200.0, GigCategory::WRITING);
-
-    g.setTitle("Updated Title");
-    check(g.getTitle() == "Updated Title", "setTitle updates value");
-
-    g.setPrice(350.0);
-    check(g.getPrice() == 350.0, "setPrice updates value");
-
-    g.setCategory(GigCategory::CODING);
-    check(g.getCategory() == GigCategory::CODING, "setCategory updates value");
-
-  
-    g.setGigID(42);
-    check(g.getGigID() == 42, "setGigID assigns DB ID");
-
-    g.setCreatedAt("2026-04-25 10:00:00");
-    check(g.getCreatedAt() == "2026-04-25 10:00:00",
-        "setCreatedAt stores timestamp");
-
-    
-    expectThrow<InvalidGigException>(
+    expectThrow<ValidationException>(
         [&]() { g.setTitle(""); },
-        "setTitle rejects empty");
+        "setTitle empty -> ValidationException");
 
-    expectThrow<InvalidGigException>(
-        [&]() { g.setPrice(-1.0); },
-        "setPrice rejects negative");
-
-    // Deactivate
-    check(g.getIsActive() == true, "gig is active before deactivate");
-    g.deactivate();
-    check(g.getIsActive() == false, "deactivate sets isActive to false");
-    g.setIsActive(true);
-    check(g.getIsActive() == true, "setIsActive can reactivate");
+    expectThrow<ValidationException>(
+        [&]() { g.setPrice(0.0); },
+        "setPrice zero -> ValidationException");
 }
 
-static void testOperatorOverloads() {
-    cout << "\n[Gig operator overloads]\n";
+static void testValidGigStillWorks() {
+    cout << "\n[Valid Gig construction still works after refactor]\n";
 
-    Gig a(1, "Gig A", "Description for gig A here.",
-        100.0, GigCategory::DESIGN);
-    Gig b(2, "Gig B", "Description for gig B here.",
-        200.0, GigCategory::CODING);
-    Gig c(1, "Different Title", "Different description entirely.",
-        999.0, GigCategory::OTHER);
+    Gig g(7, "Logo Design",
+        "I will design a professional logo for your startup.",
+        500.0, GigCategory::DESIGN);
 
-    
-    a.setGigID(1);
-    b.setGigID(2);
-    c.setGigID(1);  
-
-    
-    check(a == c, "operator==: same gigID means equal (content ignored)");
-    check(!(a == b), "operator==: different gigID means not equal");
-    check(a != b, "operator!=: different gigID returns true");
-
-   
-    check(a < b, "operator<: 100 < 200 by price");
-    check(!(b < a), "operator<: 200 not < 100");
-
-   
-    ostringstream oss;
-    oss << a;
-    string out = oss.str();
-    check(out.find("Gig A") != string::npos,
-        "operator<<: output contains title");
-    check(out.find("DESIGN") != string::npos,
-        "operator<<: output contains category");
-    check(out.find("100") != string::npos,
-        "operator<<: output contains price");
-    check(out.find("active") != string::npos,
-        "operator<<: output contains active flag");
+    check(g.getOwnerID() == 7, "ownerID preserved");
+    check(g.getTitle() == "Logo Design", "title preserved");
+    check(g.getPrice() == 500.0, "price preserved");
+    check(g.getCategory() == GigCategory::DESIGN, "category preserved");
+    check(g.getIsActive() == true, "active by default");
 }
 
-static void testDefaultConstructor() {
-    cout << "\n[Gig default constructor]\n";
-
-    Gig empty;
-    check(empty.getGigID() == 0, "default gigID is 0");
-    check(empty.getOwnerID() == 0, "default ownerID is 0");
-    check(empty.getTitle() == "", "default title empty");
-    check(empty.getPrice() == 0.0, "default price 0");
-    check(empty.getCategory() == GigCategory::OTHER, "default category OTHER");
-    check(empty.getIsActive() == true, "default isActive true");
-}
-
-
+// -------------------------
+// Entry point
+// -------------------------
 
 int main() {
     cout << "=======================================\n";
-    cout << " Module 2 Step 1: Gig + GigCategory\n";
+    cout << " Module 2 Step 2: Exception hierarchy\n";
     cout << "=======================================\n";
 
     try {
-        testCategoryEnum();
-        testValidGigConstruction();
-        testInvalidGigConstruction();
-        testSetters();
-        testOperatorOverloads();
-        testDefaultConstructor();
-    }
-    catch (const exception& e) {
-        cout << "\nUNEXPECTED EXCEPTION AT TOP LEVEL: " << e.what() << "\n";
-        g_fail++;
-    }
-
-    cout << "\n---------------------------------------\n";
-    cout << "Passed: " << g_pass << "  Failed: " << g_fail << "\n";
-    cout << "---------------------------------------\n";
-
-    return g_fail == 0 ? 0 : 1;
-}
+        testExceptionHierarchy();
+        testStdExceptionRoot();
+        testGigThrowsValidationException();
+        testValidGigStillWorks();

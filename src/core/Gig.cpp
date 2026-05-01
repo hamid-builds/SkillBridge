@@ -10,39 +10,39 @@ using namespace std;
 
 void Gig::validateTitle(const string& t) const {
     if (t.empty()) {
-        throw InvalidGigException("Gig title cannot be empty.");
+        throw ValidationException("Gig title cannot be empty.");
     }
     if (t.size() < 3) {
-        throw InvalidGigException("Gig title must be at least 3 characters.");
+        throw ValidationException("Gig title must be at least 3 characters.");
     }
     if (t.size() > 100) {
-        throw InvalidGigException("Gig title cannot exceed 100 characters.");
+        throw ValidationException("Gig title cannot exceed 100 characters.");
     }
 }
 
 void Gig::validateDescription(const string& d) const {
     if (d.size() < 10) {
-        throw InvalidGigException(
-            "Gig description must be at least 10 characters.");
+        throw ValidationException("Gig description must be at least 10 characters.");
+
     }
     if (d.size() > 2000) {
-        throw InvalidGigException(
+        throw ValidationException(
             "Gig description cannot exceed 2000 characters.");
     }
 }
 
 void Gig::validatePrice(double p) const {
     if (p <= 0.0) {
-        throw InvalidGigException("Gig price must be positive.");
+        throw ValidationException("Gig price must be positive.");
     }
     if (p >= 1000000.0) {
-        throw InvalidGigException("Gig price must be less than 1,000,000.");
+        throw ValidationException("Gig price must be less than 1,000,000.");
     }
 }
 
 void Gig::validateOwnerID(int oid) const {
     if (oid <= 0) {
-        throw InvalidGigException("Gig ownerID must be a positive integer.");
+        throw ValidationException("Gig ownerID must be a positive integer.");
     }
 }
 

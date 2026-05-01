@@ -31,6 +31,12 @@ public:
     }
 };
 
+class UnauthorizedException : public SkillBridgeException {
+public:
+    explicit UnauthorizedException(const std::string& msg)
+        : SkillBridgeException("Unauthorized: " + msg) {
+    }
+};
 class DuplicateEntryException : public SkillBridgeException 
 {
 public:
@@ -57,19 +63,11 @@ public:
 
     }
 };
-// Thrown when a Gig field fails validation (bad title, price, etc.).
-class InvalidGigException : public SkillBridgeException {
-public:
-    explicit InvalidGigException(const std::string& msg)
-        : SkillBridgeException(msg) {
-    }
-};
 
-// Thrown when a lookup for a Gig by ID returns no result.
 class GigNotFoundException : public SkillBridgeException {
 public:
     explicit GigNotFoundException(const std::string& msg)
-        : SkillBridgeException(msg) {
+        : SkillBridgeException("Gig not found: " + msg) {
     }
 };
 #endif
