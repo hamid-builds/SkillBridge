@@ -135,6 +135,7 @@
     <ClCompile Include="src\core\Admin.cpp" />
     <ClCompile Include="src\core\Client.cpp" />
     <ClCompile Include="src\core\Freelancer.cpp" />
+    <ClCompile Include="src\core\Gig.cpp" />
     <ClCompile Include="src\core\User.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\managers\DatabaseManager.cpp" />
@@ -158,6 +159,8 @@
     <ClInclude Include="include\core\Client.h" />
     <ClInclude Include="include\core\Exceptions.h" />
     <ClInclude Include="include\core\Freelancer.h" />
+    <ClInclude Include="include\core\Gig.h" />
+    <ClInclude Include="include\core\GigCategory.h" />
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />

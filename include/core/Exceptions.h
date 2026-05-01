@@ -57,5 +57,19 @@ public:
 
     }
 };
+// Thrown when a Gig field fails validation (bad title, price, etc.).
+class InvalidGigException : public SkillBridgeException {
+public:
+    explicit InvalidGigException(const std::string& msg)
+        : SkillBridgeException(msg) {
+    }
+};
 
+// Thrown when a lookup for a Gig by ID returns no result.
+class GigNotFoundException : public SkillBridgeException {
+public:
+    explicit GigNotFoundException(const std::string& msg)
+        : SkillBridgeException(msg) {
+    }
+};
 #endif
