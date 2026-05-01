@@ -138,6 +138,9 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\managers\DatabaseManager.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
+    <ClCompile Include="src\utils\BloomFilter.cpp" />
+    <ClCompile Include="src\utils\SHA256Hasher.cpp" />
+    <ClCompile Include="src\utils\TokenBucket.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="third_party\sqlite\sqlite3.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -156,7 +159,11 @@
     <ClInclude Include="include\managers\DatabaseManager.h" />
     <ClInclude Include="include\managers\IUserRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
+    <ClInclude Include="include\utils\BloomFilter.h" />
     <ClInclude Include="include\utils\DataList.h" />
+    <ClInclude Include="include\utils\IPasswordHasher.h" />
+    <ClInclude Include="include\utils\SHA256Hasher.h" />
+    <ClInclude Include="include\utils\TokenBucket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
