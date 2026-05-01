@@ -105,5 +105,23 @@ void DatabaseManager::initializeSchema()
         "                CHECK(avgRating >= 0 AND avgRating <= 5)"
         ");"
     );
+    execute(
+        "CREATE TABLE IF NOT EXISTS gigs ("
+        "  gigID        INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  ownerID      INTEGER NOT NULL,"
+        "  title        TEXT NOT NULL "
+        "               CHECK(length(title) >= 3 AND length(title) <= 100),"
+        "  description  TEXT NOT NULL "
+        "               CHECK(length(description) >= 10 AND length(description) <= 2000),"
+        "  price        REAL NOT NULL "
+        "               CHECK(price > 0 AND price < 1000000),"
+        "  category     TEXT NOT NULL "
+        "               CHECK(category IN ('DESIGN','WRITING','CODING','MARKETING','TUTORING','OTHER')),"
+        "  isActive     INTEGER NOT NULL DEFAULT 1 CHECK(isActive IN (0, 1)),"
+        "  createdAt    TEXT NOT NULL DEFAULT (datetime('now')),"
+        "  FOREIGN KEY(ownerID) REFERENCES users(userID) ON DELETE CASCADE"
+        ");"
+    );
+
 
 }

@@ -139,6 +139,7 @@
     <ClCompile Include="src\core\User.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\managers\DatabaseManager.cpp" />
+    <ClCompile Include="src\managers\SQLiteGigRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
     <ClCompile Include="src\managers\UserFactory.cpp" />
     <ClCompile Include="src\managers\UserManager.cpp" />
@@ -164,7 +165,9 @@
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />
+    <ClInclude Include="include\managers\IGigRepository.h" />
     <ClInclude Include="include\managers\IUserRepository.h" />
+    <ClInclude Include="include\managers\SQLiteGigRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
     <ClInclude Include="include\managers\UserFactory.h" />
     <ClInclude Include="include\managers\UserManager.h" />
