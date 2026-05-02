@@ -278,6 +278,31 @@ public:
         freeAllNodes();
         size_ = 0;
     }
+   
+          
+    template <typename Fn>
+    void forEach(Fn callback) {
+        for (size_t i = 0; i < bucketCount_; i++) {
+            Node* node = buckets_[i];
+            while (node) {
+                callback(node->key, node->value);
+                node = node->next;
+            }
+        }
+    }
+
+    
+    template <typename Fn>
+    void forEach(Fn callback) const {
+        for (size_t i = 0; i < bucketCount_; i++) {
+            const Node* node = buckets_[i];
+            while (node) {
+                callback(node->key, node->value);
+                node = node->next;
+            }
+        }
+    }
+
 };
 
 #endif

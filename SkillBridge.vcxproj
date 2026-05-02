@@ -139,13 +139,17 @@
     <ClCompile Include="src\core\User.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\managers\DatabaseManager.cpp" />
+    <ClCompile Include="src\managers\InvertedIndex.cpp" />
+    <ClCompile Include="src\managers\LevenshteinMatcher.cpp" />
     <ClCompile Include="src\managers\SQLiteGigRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
+    <ClCompile Include="src\managers\TFIDFRanker.cpp" />
     <ClCompile Include="src\managers\UserFactory.cpp" />
     <ClCompile Include="src\managers\UserManager.cpp" />
     <ClCompile Include="src\utils\BloomFilter.cpp" />
     <ClCompile Include="src\utils\SHA256Hasher.cpp" />
     <ClCompile Include="src\utils\TokenBucket.cpp" />
+    <ClCompile Include="src\utils\Tokenizer.cpp" />
     <ClCompile Include="testing.cpp" />
     <ClCompile Include="third_party\sqlite\sqlite3.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -165,18 +169,26 @@
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />
+    <ClInclude Include="include\managers\IFuzzyMatcher.h" />
     <ClInclude Include="include\managers\IGigRepository.h" />
+    <ClInclude Include="include\managers\InvertedIndex.h" />
+    <ClInclude Include="include\managers\ITextRanker.h" />
     <ClInclude Include="include\managers\IUserRepository.h" />
+    <ClInclude Include="include\managers\LevenshteinMatcher.h" />
     <ClInclude Include="include\managers\SQLiteGigRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
+    <ClInclude Include="include\managers\TFIDFRanker.h" />
     <ClInclude Include="include\managers\UserFactory.h" />
     <ClInclude Include="include\managers\UserManager.h" />
+    <ClInclude Include="include\utils\BinarySearch.h" />
     <ClInclude Include="include\utils\BloomFilter.h" />
     <ClInclude Include="include\utils\DataList.h" />
     <ClInclude Include="include\utils\HashMap.h" />
     <ClInclude Include="include\utils\IPasswordHasher.h" />
     <ClInclude Include="include\utils\SHA256Hasher.h" />
+    <ClInclude Include="include\utils\Sorting.h" />
     <ClInclude Include="include\utils\TokenBucket.h" />
+    <ClInclude Include="include\utils\Tokenizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
