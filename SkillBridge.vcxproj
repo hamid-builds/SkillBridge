@@ -136,14 +136,21 @@
     <ClCompile Include="src\core\Client.cpp" />
     <ClCompile Include="src\core\Freelancer.cpp" />
     <ClCompile Include="src\core\Gig.cpp" />
+    <ClCompile Include="src\core\Order.cpp" />
+    <ClCompile Include="src\core\OrderStatus.cpp" />
     <ClCompile Include="src\core\User.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\managers\CommandHistory.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\managers\DatabaseManager.cpp" />
     <ClCompile Include="src\managers\GigManager.cpp" />
     <ClCompile Include="src\managers\InvertedIndex.cpp" />
     <ClCompile Include="src\managers\LevenshteinMatcher.cpp" />
+    <ClCompile Include="src\managers\OrderStateMachine.cpp" />
     <ClCompile Include="src\managers\SeedData.cpp" />
     <ClCompile Include="src\managers\SQLiteGigRepository.cpp" />
+    <ClCompile Include="src\managers\SQLiteOrderRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
     <ClCompile Include="src\managers\TFIDFRanker.cpp" />
     <ClCompile Include="src\managers\UserFactory.cpp" />
@@ -170,18 +177,25 @@
     <ClInclude Include="include\core\Freelancer.h" />
     <ClInclude Include="include\core\Gig.h" />
     <ClInclude Include="include\core\GigCategory.h" />
+    <ClInclude Include="include\core\Order.h" />
+    <ClInclude Include="include\core\OrderStatus.h" />
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
+    <ClInclude Include="include\managers\CommandHistory.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />
     <ClInclude Include="include\managers\GigManager.h" />
+    <ClInclude Include="include\managers\ICommand.h" />
     <ClInclude Include="include\managers\IFuzzyMatcher.h" />
     <ClInclude Include="include\managers\IGigRepository.h" />
     <ClInclude Include="include\managers\InvertedIndex.h" />
+    <ClInclude Include="include\managers\IOrderRepository.h" />
     <ClInclude Include="include\managers\ITextRanker.h" />
     <ClInclude Include="include\managers\IUserRepository.h" />
     <ClInclude Include="include\managers\LevenshteinMatcher.h" />
+    <ClInclude Include="include\managers\OrderStateMachine.h" />
     <ClInclude Include="include\managers\SeedData.h" />
     <ClInclude Include="include\managers\SQLiteGigRepository.h" />
+    <ClInclude Include="include\managers\SQLiteOrderRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
     <ClInclude Include="include\managers\TFIDFRanker.h" />
     <ClInclude Include="include\managers\UserFactory.h" />

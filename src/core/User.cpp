@@ -50,6 +50,8 @@ void User::deposit(double amount)
     balance += amount;
 }
 
+
+
 void User::withdraw(double amount) 
 {
     if (amount <= 0.0) 
@@ -58,7 +60,8 @@ void User::withdraw(double amount)
     }
     if (amount > balance) 
     {
-        throw ValidationException("Insufficient funds");
+      
+        throw InsufficientFundsException(amount, balance);
     }
     balance -= amount;
 }

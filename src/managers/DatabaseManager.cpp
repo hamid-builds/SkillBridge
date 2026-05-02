@@ -122,6 +122,26 @@ void DatabaseManager::initializeSchema()
         "  FOREIGN KEY(ownerID) REFERENCES users(userID) ON DELETE CASCADE"
         ");"
     );
+   
+    execute(
+        "CREATE TABLE IF NOT EXISTS orders ("
+        "  orderID      INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  gigID        INTEGER NOT NULL,"
+        "  buyerID      INTEGER NOT NULL,"
+        "  sellerID     INTEGER NOT NULL,"
+        "  amount       REAL NOT NULL "
+        "               CHECK(amount > 0 AND amount < 1000000),"
+        "  status       TEXT NOT NULL "
+        "               CHECK(status IN ('PENDING','IN_PROGRESS','COMPLETED','CANCELLED')),"
+        "  placedAt     TEXT NOT NULL CHECK(length(placedAt) > 0),"
+        "  completedAt  TEXT,"
+        "  deadline     TEXT NOT NULL CHECK(length(deadline) > 0),"
+        "  CHECK(buyerID <> sellerID),"
+        "  FOREIGN KEY(gigID)    REFERENCES gigs(gigID)    ON DELETE CASCADE,"
+        "  FOREIGN KEY(buyerID)  REFERENCES users(userID)  ON DELETE CASCADE,"
+        "  FOREIGN KEY(sellerID) REFERENCES users(userID)  ON DELETE CASCADE"
+        ");"
+    );
 
 
 }
