@@ -162,4 +162,23 @@ void DatabaseManager::initializeSchema()
         "CREATE INDEX IF NOT EXISTS idx_messages_pair_time "
         "ON messages (senderID, receiverID, timestamp);"
     );
+    execute(
+        "CREATE TABLE IF NOT EXISTS reviews ("
+        "  reviewID       INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  orderID        INTEGER NOT NULL UNIQUE,"
+        "  reviewerID     INTEGER NOT NULL,"
+        "  targetUserID   INTEGER NOT NULL,"
+        "  rating         INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),"
+        "  sentimentScore REAL    NOT NULL DEFAULT 0.0,"
+        "  comment        TEXT    NOT NULL,"
+        "  createdAt      TEXT    NOT NULL,"
+        "  FOREIGN KEY(orderID)      REFERENCES orders(orderID)  ON DELETE CASCADE,"
+        "  FOREIGN KEY(reviewerID)   REFERENCES users(userID)    ON DELETE CASCADE,"
+        "  FOREIGN KEY(targetUserID) REFERENCES users(userID)    ON DELETE CASCADE"
+        ");"
+    );
+
+    execute(
+        "CREATE INDEX IF NOT EXISTS idx_reviews_target ON reviews(targetUserID);"
+    );
 }

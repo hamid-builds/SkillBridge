@@ -113,4 +113,12 @@ public:
     explicit MessageNotFoundException(const std::string& msg) : SkillBridgeException("Message not found: " + msg) {}
 };
 
+class ReviewNotFoundException : public SkillBridgeException {
+public:
+    explicit ReviewNotFoundException(const std::string& msg)
+        : SkillBridgeException("Review not found: " + msg) {
+    }
+};
+
+
 #endif
