@@ -140,6 +140,7 @@
     <ClCompile Include="src\core\OrderStatus.cpp" />
     <ClCompile Include="src\core\User.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\managers\CancelOrderCommand.cpp" />
     <ClCompile Include="src\managers\CommandHistory.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
@@ -147,12 +148,15 @@
     <ClCompile Include="src\managers\GigManager.cpp" />
     <ClCompile Include="src\managers\InvertedIndex.cpp" />
     <ClCompile Include="src\managers\LevenshteinMatcher.cpp" />
+    <ClCompile Include="src\managers\OrderManager.cpp" />
     <ClCompile Include="src\managers\OrderStateMachine.cpp" />
+    <ClCompile Include="src\managers\PlaceOrderCommand.cpp" />
     <ClCompile Include="src\managers\SeedData.cpp" />
     <ClCompile Include="src\managers\SQLiteGigRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteOrderRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
     <ClCompile Include="src\managers\TFIDFRanker.cpp" />
+    <ClCompile Include="src\managers\UpdateStatusCommand.cpp" />
     <ClCompile Include="src\managers\UserFactory.cpp" />
     <ClCompile Include="src\managers\UserManager.cpp" />
     <ClCompile Include="src\utils\AutocompleteTrie.cpp" />
@@ -181,6 +185,7 @@
     <ClInclude Include="include\core\OrderStatus.h" />
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
+    <ClInclude Include="include\managers\CancelOrderCommand.h" />
     <ClInclude Include="include\managers\CommandHistory.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />
     <ClInclude Include="include\managers\GigManager.h" />
@@ -192,14 +197,18 @@
     <ClInclude Include="include\managers\ITextRanker.h" />
     <ClInclude Include="include\managers\IUserRepository.h" />
     <ClInclude Include="include\managers\LevenshteinMatcher.h" />
+    <ClInclude Include="include\managers\OrderManager.h" />
     <ClInclude Include="include\managers\OrderStateMachine.h" />
+    <ClInclude Include="include\managers\PlaceOrderCommand.h" />
     <ClInclude Include="include\managers\SeedData.h" />
     <ClInclude Include="include\managers\SQLiteGigRepository.h" />
     <ClInclude Include="include\managers\SQLiteOrderRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
     <ClInclude Include="include\managers\TFIDFRanker.h" />
+    <ClInclude Include="include\managers\UpdateStatusCommand.h" />
     <ClInclude Include="include\managers\UserFactory.h" />
     <ClInclude Include="include\managers\UserManager.h" />
+    <ClInclude Include="include\test_helpers\FakeRepos.h" />
     <ClInclude Include="include\utils\AutocompleteTrie.h" />
     <ClInclude Include="include\utils\BinarySearch.h" />
     <ClInclude Include="include\utils\BloomFilter.h" />

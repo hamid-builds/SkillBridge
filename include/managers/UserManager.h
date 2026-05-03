@@ -45,6 +45,10 @@ public:
 
     bool deleteAccount(const std::string& plaintextPassword);
 
+ 
+    bool depositToBalance(double amount);
+
+   
     User* getCurrentUser() const 
     {
         return currentUser_; 

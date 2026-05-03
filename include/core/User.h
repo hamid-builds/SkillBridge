@@ -48,7 +48,9 @@ public:
     
     void setName(const std::string& newName);
     void setPasswordHash(const std::string& newHash);
-    
+   
+    void setCreatedAt(const std::string& ts) { createdAt = ts; }
+
     void deposit(double amount);
     void withdraw(double amount);
 

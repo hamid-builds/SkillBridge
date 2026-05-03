@@ -6,8 +6,29 @@
 #include "core/Admin.h"
 #include "core/Exceptions.h"
 #include "sqlite3.h"
-
+#include <ctime>
+#include <cstdio>
 using namespace std;
+
+static std::string nowTimestamp() {
+    time_t raw = time(nullptr);
+    struct tm tm_buf;
+#if defined(_WIN32)
+    localtime_s(&tm_buf, &raw);
+#else
+    localtime_r(&raw, &tm_buf);
+#endif
+    char buf[64];
+    snprintf(buf, sizeof(buf),
+        "%04d-%02d-%02d %02d:%02d:%02d",
+        tm_buf.tm_year + 1900,
+        tm_buf.tm_mon + 1,
+        tm_buf.tm_mday,
+        tm_buf.tm_hour,
+        tm_buf.tm_min,
+        tm_buf.tm_sec);
+    return std::string(buf);
+}
 
 void SQLiteUserRepository::throwPrepareError(const string& sql) 
 {
@@ -67,9 +88,9 @@ bool SQLiteUserRepository::saveUser(User* user)
 
     const string sql =
         "INSERT INTO users "
-        "(name, email, passwordHash, role, balance, "
+        "(name, email, passwordHash, role, balance, createdAt, "
         " portfolio, skills, avgRating) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     sqlite3_stmt* stmt = nullptr;
     if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) 
@@ -89,15 +110,18 @@ bool SQLiteUserRepository::saveUser(User* user)
     }
 
     string roleStr = roleToString(user->getRole());
+    string createdAt = nowTimestamp();
+
 
     sqlite3_bind_text(stmt, 1, user->getName().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 2, user->getEmail().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 3, user->getPasswordHash().c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt, 4, roleStr.c_str(), -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, 5, user->getBalance());
-    sqlite3_bind_text(stmt, 6, portfolio.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 7, skills.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_double(stmt, 8, avgRating);
+    sqlite3_bind_text(stmt, 6, createdAt.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 7, portfolio.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 8, skills.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_double(stmt, 9, avgRating);
 
     int rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -113,6 +137,7 @@ bool SQLiteUserRepository::saveUser(User* user)
 
     int newID = static_cast<int>(sqlite3_last_insert_rowid(db));
     user->setUserID(newID);
+    user->setCreatedAt(createdAt);
     return true;
 }
 

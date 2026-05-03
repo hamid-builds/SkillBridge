@@ -126,6 +126,10 @@ User* UserManager::registerUser(const string& name, const string& email, const s
     string hash = hasher_->hash(plaintextPassword);
 
     User* newUser = UserFactory::create(role, name, email, hash);
+    if (role == UserRole::CLIENT) {
+        newUser->deposit(1000.0);
+    }
+
 
     if (!repo_->saveUser(newUser)) 
     {
@@ -219,4 +223,30 @@ bool UserManager::deleteAccount(const string& plaintextPassword)
         logout();
     }
     return ok;
+}
+bool UserManager::depositToBalance(double amount) {
+    if (!currentUser_)
+    {
+        throw AuthenticationException( "must be logged in to deposit funds");
+    }
+    if (amount <= 0.0) {
+        throw ValidationException("deposit amount must be positive");
+    }
+    if (amount > 1000000.0) {
+        throw ValidationException(
+            "deposit amount exceeds maximum (Rs. 1,000,000)");
+    }
+
+    
+    currentUser_->deposit(amount);
+
+    if (!repo_->updateUser(currentUser_)) 
+    {
+  
+        currentUser_->withdraw(amount);
+        throw DatabaseException("failed to persist deposit for userID=" +
+            std::to_string(currentUser_->getUserID()));
+    }
+
+    return true;
 }
