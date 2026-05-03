@@ -136,6 +136,7 @@
     <ClCompile Include="src\core\Client.cpp" />
     <ClCompile Include="src\core\Freelancer.cpp" />
     <ClCompile Include="src\core\Gig.cpp" />
+    <ClCompile Include="src\core\Message.cpp" />
     <ClCompile Include="src\core\Order.cpp" />
     <ClCompile Include="src\core\OrderStatus.cpp" />
     <ClCompile Include="src\core\User.cpp" />
@@ -153,19 +154,24 @@
     <ClCompile Include="src\managers\PlaceOrderCommand.cpp" />
     <ClCompile Include="src\managers\SeedData.cpp" />
     <ClCompile Include="src\managers\SQLiteGigRepository.cpp" />
+    <ClCompile Include="src\managers\SQLiteMessageRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteOrderRepository.cpp" />
     <ClCompile Include="src\managers\SQLiteUserRepository.cpp" />
     <ClCompile Include="src\managers\TFIDFRanker.cpp" />
     <ClCompile Include="src\managers\UpdateStatusCommand.cpp" />
     <ClCompile Include="src\managers\UserFactory.cpp" />
     <ClCompile Include="src\managers\UserManager.cpp" />
+    <ClCompile Include="src\tests\test_message_and_repo.cpp" />
     <ClCompile Include="src\utils\AutocompleteTrie.cpp" />
     <ClCompile Include="src\utils\BloomFilter.cpp" />
+    <ClCompile Include="src\utils\HuffmanCoder.cpp" />
     <ClCompile Include="src\utils\SHA256Hasher.cpp" />
     <ClCompile Include="src\utils\SoundexEncoder.cpp" />
     <ClCompile Include="src\utils\TokenBucket.cpp" />
     <ClCompile Include="src\utils\Tokenizer.cpp" />
     <ClCompile Include="testing.cpp" />
+    <ClCompile Include="test_huffmancoder.cpp" />
+    <ClCompile Include="test_lrucache.cpp" />
     <ClCompile Include="third_party\sqlite\sqlite3.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -174,6 +180,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HuffmanCoder.h" />
     <ClInclude Include="include\cli\CLIApp.h" />
     <ClInclude Include="include\core\Admin.h" />
     <ClInclude Include="include\core\Client.h" />
@@ -181,6 +188,7 @@
     <ClInclude Include="include\core\Freelancer.h" />
     <ClInclude Include="include\core\Gig.h" />
     <ClInclude Include="include\core\GigCategory.h" />
+    <ClInclude Include="include\core\Message.h" />
     <ClInclude Include="include\core\Order.h" />
     <ClInclude Include="include\core\OrderStatus.h" />
     <ClInclude Include="include\core\User.h" />
@@ -192,6 +200,7 @@
     <ClInclude Include="include\managers\ICommand.h" />
     <ClInclude Include="include\managers\IFuzzyMatcher.h" />
     <ClInclude Include="include\managers\IGigRepository.h" />
+    <ClInclude Include="include\managers\IMessageRepository.h" />
     <ClInclude Include="include\managers\InvertedIndex.h" />
     <ClInclude Include="include\managers\IOrderRepository.h" />
     <ClInclude Include="include\managers\ITextRanker.h" />
@@ -202,6 +211,7 @@
     <ClInclude Include="include\managers\PlaceOrderCommand.h" />
     <ClInclude Include="include\managers\SeedData.h" />
     <ClInclude Include="include\managers\SQLiteGigRepository.h" />
+    <ClInclude Include="include\managers\SQLiteMessageRepository.h" />
     <ClInclude Include="include\managers\SQLiteOrderRepository.h" />
     <ClInclude Include="include\managers\SQLiteUserRepository.h" />
     <ClInclude Include="include\managers\TFIDFRanker.h" />
@@ -221,6 +231,7 @@
     <ClInclude Include="include\utils\SoundexEncoder.h" />
     <ClInclude Include="include\utils\TokenBucket.h" />
     <ClInclude Include="include\utils\Tokenizer.h" />
+    <ClInclude Include="LRUCache.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

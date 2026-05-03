@@ -108,5 +108,9 @@ public:
     }
 };
 
+class MessageNotFoundException : public SkillBridgeException {
+public:
+    explicit MessageNotFoundException(const std::string& msg) : SkillBridgeException("Message not found: " + msg) {}
+};
 
 #endif

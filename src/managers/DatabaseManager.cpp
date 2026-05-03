@@ -142,6 +142,24 @@ void DatabaseManager::initializeSchema()
         "  FOREIGN KEY(sellerID) REFERENCES users(userID)  ON DELETE CASCADE"
         ");"
     );
-
-
+    execute(
+        "CREATE TABLE IF NOT EXISTS messages ("
+        "  messageID    INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  senderID     INTEGER NOT NULL,"
+        "  receiverID   INTEGER NOT NULL,"
+        "  payloadBlob  BLOB    NOT NULL,"
+        "  payloadBits  INTEGER NOT NULL CHECK(payloadBits >= 0),"
+        "  treeBlob     BLOB    NOT NULL,"
+        "  treeBits     INTEGER NOT NULL CHECK(treeBits >= 0),"
+        "  timestamp    TEXT    NOT NULL CHECK(length(timestamp) > 0),"
+        "  isRead       INTEGER NOT NULL DEFAULT 0 CHECK(isRead IN (0, 1)),"
+        "  CHECK(senderID <> receiverID),"
+        "  FOREIGN KEY(senderID)   REFERENCES users(userID) ON DELETE CASCADE,"
+        "  FOREIGN KEY(receiverID) REFERENCES users(userID) ON DELETE CASCADE"
+        ");"
+    );
+    execute(
+        "CREATE INDEX IF NOT EXISTS idx_messages_pair_time "
+        "ON messages (senderID, receiverID, timestamp);"
+    );
 }

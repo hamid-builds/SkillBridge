@@ -8,10 +8,10 @@
 
 class Order {
 private:
-    int    orderID_;
-    int   gigID_;
-    int  buyerID_;
-    int  sellerID_;
+    int orderID_;
+    int gigID_;
+    int buyerID_;
+    int sellerID_;
     double  amount_;
     OrderStatus status_;
     std::string placedAt_;
@@ -20,13 +20,11 @@ private:
 
 public:
     Order();
-    Order(int orderID,int gigID, int buyerID, int sellerID, double amount, OrderStatus status, const std::string& placedAt, const std::string& completedAt,
-        const std::string& deadline);
-
+    Order(int orderID,int gigID, int buyerID, int sellerID, double amount, OrderStatus status, const std::string& placedAt, const std::string& completedAt, const std::string& deadline);
     Order(int gigID, int buyerID,int sellerID, double amount, const std::string& placedAt,const std::string& deadline);
 
     //Getters
-    int getOrderID()  const
+    int getOrderID() const
     { 
         return orderID_; 
     }
@@ -38,11 +36,11 @@ public:
     { 
         return buyerID_; 
     }
-    int  getSellerID()    const 
+    int  getSellerID() const 
     { 
         return sellerID_;
     }
-    double getAmount()  const 
+    double getAmount() const 
     {
         return amount_;
     }
@@ -50,7 +48,7 @@ public:
     { 
         return status_;
     }
-    const std::string& getPlacedAt()    const 
+    const std::string& getPlacedAt() const 
     {
         return placedAt_; 
     }
@@ -65,6 +63,7 @@ public:
     //Setters
 
     void setOrderID(int id);
+
     void setGigID(int gigID);
     void setBuyerID(int buyerID);
     void setSellerID(int sellerID);
