@@ -181,4 +181,26 @@ void DatabaseManager::initializeSchema()
     execute(
         "CREATE INDEX IF NOT EXISTS idx_reviews_target ON reviews(targetUserID);"
     );
+
+    
+    execute(
+        "CREATE TABLE IF NOT EXISTS endorsements ("
+        "  endorsementID INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  fromUserID    INTEGER NOT NULL,"
+        "  toUserID      INTEGER NOT NULL,"
+        "  skill         TEXT    NOT NULL CHECK(length(skill) > 0),"
+        "  weight        REAL    NOT NULL DEFAULT 1.0"
+        "                        CHECK(weight > 0 AND weight <= 10),"
+        "  timestamp     TEXT    NOT NULL,"
+        "  CHECK(fromUserID <> toUserID),"
+        "  UNIQUE(fromUserID, toUserID, skill),"
+        "  FOREIGN KEY(fromUserID) REFERENCES users(userID) ON DELETE CASCADE,"
+        "  FOREIGN KEY(toUserID)   REFERENCES users(userID) ON DELETE CASCADE"
+        ");"
+    );
+    execute(
+        "CREATE INDEX IF NOT EXISTS idx_endorsements_to "
+        "ON endorsements(toUserID);"
+    );
+
 }

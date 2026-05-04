@@ -120,5 +120,12 @@ public:
     }
 };
 
+class EndorsementNotFoundException : public SkillBridgeException {
+public:
+    explicit EndorsementNotFoundException(const std::string& msg)
+        : SkillBridgeException("Endorsement not found: " + msg) {
+    }
+};
+
 
 #endif
