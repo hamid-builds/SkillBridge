@@ -250,3 +250,72 @@ bool UserManager::depositToBalance(double amount) {
 
     return true;
 }
+
+// =============================================================================
+// Module 4 Step 13 additions to UserManager.cpp
+// =============================================================================
+//
+// Append the chunk below to your existing src/managers/UserManager.cpp.
+// Do NOT replace the whole file. The existing methods (registerUser, login,
+// logout, updateProfile, changePassword, deleteAccount, depositToBalance,
+// validateName, validateEmail, validatePassword, enforceRateLimit,
+// setCurrentUser, ctor, dtor) stay exactly as they are.
+//
+// Required additional include at the TOP of UserManager.cpp (only if not
+// already present):
+//
+//   #include "core/User.h"
+//   #include "core/UserRole.h"
+//   #include "core/Exceptions.h"
+//
+// All three are almost certainly already there. Skip any that are.
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// requireAdmin
+//
+// Auth gate used by admin-only methods. Loads the user record by ID and
+// verifies the role is ADMIN. The pointer is owned by the helper for the
+// duration of the check and disposed before returning.
+//
+// Failure modes:
+//   - User not found in the repo  -> UnauthorizedException
+//   - User found but role != ADMIN -> UnauthorizedException
+// -----------------------------------------------------------------------------
+void UserManager::requireAdmin(int adminID) const {
+    User* u = repo_->findUserByID(adminID);
+    if (!u) {
+        throw UnauthorizedException("admin access required: user not found");
+    }
+    UserRole role = u->getRole();
+    delete u;
+    if (role != UserRole::ADMIN) {
+        throw UnauthorizedException("admin access required");
+    }
+}
+
+// -----------------------------------------------------------------------------
+// adminListAllUsers
+//
+// Returns every User in the system. Each pointer is freshly allocated by
+// the repository; the CALLER OWNS them and must delete every element. The
+// CLI call site is responsible for the cleanup loop.
+//
+// Pure pass-through after the auth gate: there is no business policy
+// applied to the listing itself. Sorting, pagination, and filtering are
+// CLI concerns.
+// -----------------------------------------------------------------------------
+DataList<User*> UserManager::adminListAllUsers(int currentUserID) {
+    requireAdmin(currentUserID);
+    return repo_->findAllUsers();
+}
+bool UserManager::adminDeleteUser(int currentUserID, int targetUserID) {
+    requireAdmin(currentUserID);
+    if (targetUserID == currentUserID) {
+        throw ValidationException(
+            "cannot delete your own admin account through admin panel; "
+            "use the regular delete account flow with password");
+    }
+    return repo_->deleteUser(targetUserID);
+}

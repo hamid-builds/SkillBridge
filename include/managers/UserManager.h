@@ -7,6 +7,7 @@
 #include "utils/BloomFilter.h"
 #include "utils/HashMap.h"
 #include "utils/TokenBucket.h"
+#include "../utils/DataList.h"
 #include "core/UserRole.h"
 
 class User;
@@ -28,6 +29,7 @@ private:
     void enforceRateLimit(const std::string& email, HashMap<std::string, TokenBucket>& buckets, double capacity, double refillPerSec, const std::string& operation);
 
     void setCurrentUser(User* newUser);
+    void requireAdmin(int adminID) const;
 
 public:
     UserManager(IUserRepository* repo, IPasswordHasher* hasher);
@@ -48,7 +50,9 @@ public:
  
     bool depositToBalance(double amount);
 
-   
+    DataList<User*> adminListAllUsers(int currentUserID);
+    bool adminDeleteUser(int currentUserID, int targetUserID);
+
     User* getCurrentUser() const 
     {
         return currentUser_; 

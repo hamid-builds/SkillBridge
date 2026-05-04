@@ -9,19 +9,9 @@
 
 using namespace std;
 
-
-MessageManager::MessageManager(IMessageRepository& messageRepo,
-    IUserRepository& userRepo,
-    HuffmanCoder& coder)
-    : messageRepo_(messageRepo),
-    userRepo_(userRepo),
-    coder_(coder),
-    conversationCache_(CACHE_CAPACITY)
+MessageManager::MessageManager(IMessageRepository& messageRepo, IUserRepository& userRepo, HuffmanCoder& coder) : messageRepo_(messageRepo), userRepo_(userRepo), coder_(coder),conversationCache_(CACHE_CAPACITY)
 {
 }
-
-
-
 
 string MessageManager::currentTimestamp() const {
    
@@ -63,8 +53,8 @@ User* MessageManager::loadUser(int userID) const {
 }
 
 void MessageManager::requireSelfOrAdmin(int callerID, int expectedUserID) const {
-    if (callerID == expectedUserID) return;
-
+    if (callerID == expectedUserID)
+        return;
     User* caller = loadUser(callerID);
     UserRole role;
     try {
