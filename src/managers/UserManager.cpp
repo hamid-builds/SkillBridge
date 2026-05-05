@@ -112,6 +112,11 @@ User* UserManager::registerUser(const string& name, const string& email, const s
     validateName(name);
     validateEmail(email);
     validatePassword(plaintextPassword);
+    
+    if (role == UserRole::ADMIN) 
+    {
+        throw ValidationException("invalid role for registration");
+    }
 
     enforceRateLimit(email, registerBuckets_, REGISTER_CAPACITY, REGISTER_REFILL, "registration");
 
@@ -126,10 +131,11 @@ User* UserManager::registerUser(const string& name, const string& email, const s
     string hash = hasher_->hash(plaintextPassword);
 
     User* newUser = UserFactory::create(role, name, email, hash);
-    if (role == UserRole::CLIENT) {
+
+    if (role == UserRole::CLIENT) 
+    {
         newUser->deposit(1000.0);
     }
-
 
     if (!repo_->saveUser(newUser)) 
     {
@@ -224,98 +230,122 @@ bool UserManager::deleteAccount(const string& plaintextPassword)
     }
     return ok;
 }
-bool UserManager::depositToBalance(double amount) {
-    if (!currentUser_)
+
+bool UserManager::depositToBalance(double amount) 
+{
+    if (!currentUser_) 
     {
-        throw AuthenticationException( "must be logged in to deposit funds");
+        throw AuthenticationException("must be logged in to deposit funds");
     }
-    if (amount <= 0.0) {
+    if (amount <= 0.0) 
+    {
         throw ValidationException("deposit amount must be positive");
     }
-    if (amount > 1000000.0) {
-        throw ValidationException(
-            "deposit amount exceeds maximum (Rs. 1,000,000)");
+    if (amount > 1000000.0) 
+    {
+        throw ValidationException("deposit amount exceeds maximum (Rs. 1,000,000)");
     }
 
-    
     currentUser_->deposit(amount);
 
     if (!repo_->updateUser(currentUser_)) 
     {
-  
         currentUser_->withdraw(amount);
-        throw DatabaseException("failed to persist deposit for userID=" +
-            std::to_string(currentUser_->getUserID()));
+        throw DatabaseException("failed to persist deposit for userID=" + std::to_string(currentUser_->getUserID()));
     }
 
     return true;
 }
 
-// =============================================================================
-// Module 4 Step 13 additions to UserManager.cpp
-// =============================================================================
-//
-// Append the chunk below to your existing src/managers/UserManager.cpp.
-// Do NOT replace the whole file. The existing methods (registerUser, login,
-// logout, updateProfile, changePassword, deleteAccount, depositToBalance,
-// validateName, validateEmail, validatePassword, enforceRateLimit,
-// setCurrentUser, ctor, dtor) stay exactly as they are.
-//
-// Required additional include at the TOP of UserManager.cpp (only if not
-// already present):
-//
-//   #include "core/User.h"
-//   #include "core/UserRole.h"
-//   #include "core/Exceptions.h"
-//
-// All three are almost certainly already there. Skip any that are.
-// =============================================================================
-
-
-// -----------------------------------------------------------------------------
-// requireAdmin
-//
-// Auth gate used by admin-only methods. Loads the user record by ID and
-// verifies the role is ADMIN. The pointer is owned by the helper for the
-// duration of the check and disposed before returning.
-//
-// Failure modes:
-//   - User not found in the repo  -> UnauthorizedException
-//   - User found but role != ADMIN -> UnauthorizedException
-// -----------------------------------------------------------------------------
-void UserManager::requireAdmin(int adminID) const {
+void UserManager::requireAdmin(int adminID) const 
+{
     User* u = repo_->findUserByID(adminID);
-    if (!u) {
+    if (!u) 
+    {
         throw UnauthorizedException("admin access required: user not found");
     }
     UserRole role = u->getRole();
     delete u;
-    if (role != UserRole::ADMIN) {
+    if (role != UserRole::ADMIN) 
+    {
         throw UnauthorizedException("admin access required");
     }
 }
 
-// -----------------------------------------------------------------------------
-// adminListAllUsers
-//
-// Returns every User in the system. Each pointer is freshly allocated by
-// the repository; the CALLER OWNS them and must delete every element. The
-// CLI call site is responsible for the cleanup loop.
-//
-// Pure pass-through after the auth gate: there is no business policy
-// applied to the listing itself. Sorting, pagination, and filtering are
-// CLI concerns.
-// -----------------------------------------------------------------------------
-DataList<User*> UserManager::adminListAllUsers(int currentUserID) {
+DataList<User*> UserManager::adminListAllUsers(int currentUserID) 
+{
     requireAdmin(currentUserID);
     return repo_->findAllUsers();
 }
-bool UserManager::adminDeleteUser(int currentUserID, int targetUserID) {
+
+bool UserManager::adminDeleteUser(int currentUserID, int targetUserID) 
+{
     requireAdmin(currentUserID);
-    if (targetUserID == currentUserID) {
-        throw ValidationException(
-            "cannot delete your own admin account through admin panel; "
-            "use the regular delete account flow with password");
+
+    if (targetUserID == currentUserID) 
+    {
+        throw ValidationException("cannot delete your own admin account through admin panel; ""use the regular delete account flow with password");
     }
+
     return repo_->deleteUser(targetUserID);
+}
+
+bool UserManager::seedAdmin(const string& name, const string& email, const string& plaintextPassword) 
+{
+    validateName(name);
+    validateEmail(email);
+    validatePassword(plaintextPassword);
+
+    if (repo_->emailExists(email)) 
+    {
+        return false;
+    }
+
+    string hash = hasher_->hash(plaintextPassword);
+
+    User* admin = UserFactory::create(UserRole::ADMIN, name, email, hash);
+
+    if (!repo_->saveUser(admin)) 
+    {
+        delete admin;
+        throw DatabaseException("failed to save seeded admin");
+    }
+
+    bloomFilter_.add(email);
+
+    delete admin;
+    return true;
+}
+
+User* UserManager::authenticate(const string& email, const string& plaintextPassword) 
+{
+    if (email.empty()) 
+    {
+        throw ValidationException("email cannot be empty");
+    }
+    if (plaintextPassword.empty()) 
+    {
+        throw ValidationException("password cannot be empty");
+    }
+
+    enforceRateLimit(email, loginBuckets_, LOGIN_CAPACITY, LOGIN_REFILL, "login");
+
+    User* found = repo_->findUserByEmail(email);
+    if (!found) 
+    {
+        throw AuthenticationException("unknown email: " + email);
+    }
+
+    if (!hasher_->verify(plaintextPassword, found->getPasswordHash())) 
+    {
+        delete found;
+        throw AuthenticationException("incorrect password");
+    }
+
+    return found;
+}
+
+User* UserManager::findUserByID(int userID) const 
+{
+    return repo_->findUserByID(userID);
 }

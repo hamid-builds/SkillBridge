@@ -1,80 +1,38 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# debug information files
-*.dwo
-
-# Visual Studio
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Build folders
-Debug/
-Release/
-x64/
-x86/
+# Build output
 [Dd]ebug/
 [Rr]elease/
-[Bb]in/
+x64/
+x86/
+[Bb]uild/
 [Oo]bj/
+[Bb]in/
 
-# Visual Studio cache/options
-*.VC.db
-*.VC.VC.opendb
+# Visual Studio cache and user-specific files
+.vs/
+*.vcxproj.user
+*.suo
+*.user
 *.aps
 *.ncb
-*.opendb
-*.opensdf
 *.sdf
-*.cachefile
+*.opensdf
+*.tlog
 
-x64/
+# Compiled binaries (in case they end up elsewhere)
 *.exe
 *.obj
 *.pdb
+*.ilk
+*.idb
+*.lib
+*.dll
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# SQLite database files (auto-created by the app on first run)
 *.db
 *.db-journal
-
-db/*.db
-db/*.db-journal
-db/*.db-shm
-db/*.db-wal
+*.db-shm
+*.db-wal

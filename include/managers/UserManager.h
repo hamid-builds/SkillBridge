@@ -7,7 +7,7 @@
 #include "utils/BloomFilter.h"
 #include "utils/HashMap.h"
 #include "utils/TokenBucket.h"
-#include "../utils/DataList.h"
+#include "utils/DataList.h"
 #include "core/UserRole.h"
 
 class User;
@@ -52,6 +52,12 @@ public:
 
     DataList<User*> adminListAllUsers(int currentUserID);
     bool adminDeleteUser(int currentUserID, int targetUserID);
+
+    bool seedAdmin(const std::string& name, const std::string& email, const std::string& plaintextPassword);
+
+    User* authenticate(const std::string& email, const std::string& plaintextPassword);
+    
+    User* findUserByID(int userID) const;
 
     User* getCurrentUser() const 
     {

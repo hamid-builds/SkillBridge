@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\api\HttpServer.cpp" />
+    <ClCompile Include="src\api\Serializers.cpp" />
     <ClCompile Include="src\cli\CLIApp.cpp" />
     <ClCompile Include="src\core\Admin.cpp" />
     <ClCompile Include="src\core\Client.cpp" />
@@ -187,6 +189,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\api\HttpServer.h" />
+    <ClInclude Include="include\api\Serializers.h" />
     <ClInclude Include="include\cli\CLIApp.h" />
     <ClInclude Include="include\core\Admin.h" />
     <ClInclude Include="include\core\Client.h" />
@@ -201,6 +205,8 @@
     <ClInclude Include="include\core\Review.h" />
     <ClInclude Include="include\core\User.h" />
     <ClInclude Include="include\core\UserRole.h" />
+    <ClInclude Include="include\httplib.h" />
+    <ClInclude Include="include\json.hpp" />
     <ClInclude Include="include\managers\CancelOrderCommand.h" />
     <ClInclude Include="include\managers\CommandHistory.h" />
     <ClInclude Include="include\managers\DatabaseManager.h" />
@@ -235,7 +241,6 @@
     <ClInclude Include="include\managers\UserManager.h" />
     <ClInclude Include="include\strategies\BagOfWordsSentiment.h" />
     <ClInclude Include="include\strategies\ISentimentAnalyzer.h" />
-    <ClInclude Include="include\test_helpers\FakeRepos.h" />
     <ClInclude Include="include\utils\AutocompleteTrie.h" />
     <ClInclude Include="include\utils\BinarySearch.h" />
     <ClInclude Include="include\utils\BloomFilter.h" />
@@ -253,6 +258,9 @@
     <ClInclude Include="include\utils\SoundexEncoder.h" />
     <ClInclude Include="include\utils\TokenBucket.h" />
     <ClInclude Include="include\utils\Tokenizer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="public\index.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
