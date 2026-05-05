@@ -169,7 +169,6 @@
     <ClCompile Include="src\managers\UserFactory.cpp" />
     <ClCompile Include="src\managers\UserManager.cpp" />
     <ClCompile Include="src\strategies\BagOfWordsSentiment.cpp" />
-    <ClCompile Include="src\tests\test_message_and_repo.cpp" />
     <ClCompile Include="src\utils\AutocompleteTrie.cpp" />
     <ClCompile Include="src\utils\BloomFilter.cpp" />
     <ClCompile Include="src\utils\GraphTraverser.cpp" />
@@ -180,9 +179,6 @@
     <ClCompile Include="src\utils\SoundexEncoder.cpp" />
     <ClCompile Include="src\utils\TokenBucket.cpp" />
     <ClCompile Include="src\utils\Tokenizer.cpp" />
-    <ClCompile Include="testing.cpp" />
-    <ClCompile Include="test_huffmancoder.cpp" />
-    <ClCompile Include="test_lrucache.cpp" />
     <ClCompile Include="third_party\sqlite\sqlite3.c">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
@@ -191,7 +187,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HuffmanCoder.h" />
     <ClInclude Include="include\cli\CLIApp.h" />
     <ClInclude Include="include\core\Admin.h" />
     <ClInclude Include="include\core\Client.h" />
@@ -247,7 +242,9 @@
     <ClInclude Include="include\utils\DataList.h" />
     <ClInclude Include="include\utils\GraphTraverser.h" />
     <ClInclude Include="include\utils\HashMap.h" />
+    <ClInclude Include="include\utils\HuffmanCoder.h" />
     <ClInclude Include="include\utils\IPasswordHasher.h" />
+    <ClInclude Include="include\utils\LRUCache.h" />
     <ClInclude Include="include\utils\MinHeap.h" />
     <ClInclude Include="include\utils\PageRankCalculator.h" />
     <ClInclude Include="include\utils\SHA256Hasher.h" />
@@ -256,7 +253,6 @@
     <ClInclude Include="include\utils\SoundexEncoder.h" />
     <ClInclude Include="include\utils\TokenBucket.h" />
     <ClInclude Include="include\utils\Tokenizer.h" />
-    <ClInclude Include="LRUCache.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
