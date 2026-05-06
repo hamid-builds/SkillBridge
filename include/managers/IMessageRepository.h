@@ -15,6 +15,7 @@ public:
     virtual DataList<Message> findInbox(int receiverID) const = 0;
     virtual DataList<Message> findAllMessages() const = 0;
     virtual int countUnread(int receiverID) const = 0;
+    virtual DataList<int> findConversationPartners(int userID) const = 0;
 };
 
 #endif

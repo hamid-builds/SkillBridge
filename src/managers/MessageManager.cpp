@@ -281,3 +281,8 @@ int MessageManager::countUnread(int currentUserID, int receiverID) {
 void MessageManager::clearCache() {
     conversationCache_.clear();
 }
+
+DataList<int> MessageManager::getConversationPartners(int currentUserID, int userID) {
+    requireSelfOrAdmin(currentUserID, userID);
+    return messageRepo_.findConversationPartners(userID);
+}

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - SkillBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/shared.css">
+    <style>
+        .hero-section {
+            margin-bottom: 40px;
+        }
+
+            .hero-section .sub {
+                max-width: 56ch;
+            }
+
+        /* Tab strip */
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+            .admin-tabs button {
+                background: rgba(254,253,250,0.5);
+                border: 1px solid var(--line);
+                color: var(--text-dim);
+                padding: 8px 18px;
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all .2s;
+                font-family: inherit;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+                .admin-tabs button:hover {
+                    border-color: var(--line-strong);
+                    color: var(--text);
+                    background: rgba(254,253,250,0.9);
+                }
+
+                .admin-tabs button.on {
+                    background: var(--text);
+                    color: var(--bg-0);
+                    border-color: var(--text);
+                }
+
+        /* Section head */
+        .sec-head {
+            margin-bottom: 16px;
+        }
+
+        /* Table wrapper with horizontal scroll */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Admin table */
+        .admin-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+        }
+
+            .admin-table thead th {
+                text-align: left;
+                padding: 10px 14px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                color: var(--text-faint);
+                font-family: 'Geist Mono', monospace;
+                border-bottom: 1px solid var(--line-strong);
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                background: var(--bg-0);
+                z-index: 2;
+            }
+
+            .admin-table tbody tr {
+                animation: fadeUp .35s ease-out backwards;
+            }
+
+            .admin-table tbody td {
+                padding: 12px 14px;
+                border-bottom: 1px solid var(--line);
+                color: var(--text);
+                vertical-align: middle;
+                white-space: nowrap;
+            }
+
+            .admin-table tbody tr:hover td {
+                background: rgba(254,253,250,0.5);
+            }
+
+            .admin-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+        /* Inline role badge */
+        .role-badge {
+            display: inline-flex;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 600;
+            font-family: 'Geist Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+            .role-badge.client {
+                background: rgba(245,214,138,0.25);
+                color: #8a6d00;
+            }
+
+            .role-badge.freelancer {
+                background: var(--accent-soft);
+                color: var(--accent);
+            }
+
+            .role-badge.admin {
+                background: rgba(31,42,38,0.08);
+                color: var(--text);
+            }
+
+        /* Active pill */
+        .active-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Geist Mono', monospace;
+        }
+
+            .active-pill .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+
+            .active-pill.yes {
+                background: rgba(15,110,84,0.10);
+                color: var(--accent);
+            }
+
+            .active-pill.no {
+                background: var(--error-soft);
+                color: var(--error);
+            }
+
+        /* Status badge (reused from orders) */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Geist Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+
+            .status-badge .status-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+
+            .status-badge.pending {
+                background: rgba(245,214,138,0.25);
+                color: #8a6d00;
+                border: 1px solid rgba(245,214,138,0.4);
+            }
+
+            .status-badge.in_progress {
+                background: var(--accent-soft);
+                color: var(--accent);
+                border: 1px solid rgba(15,110,84,0.15);
+            }
+
+            .status-badge.completed {
+                background: rgba(15,110,84,0.10);
+                color: var(--accent);
+                border: 1px solid rgba(15,110,84,0.2);
+            }
+
+            .status-badge.cancelled {
+                background: var(--error-soft);
+                color: var(--error);
+                border: 1px solid rgba(196,82,58,0.15);
+            }
+
+        /* Inline delete button */
+        .btn-table-danger {
+            background: none;
+            border: 1px solid transparent;
+            color: var(--error);
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 4px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+            .btn-table-danger:hover {
+                background: var(--error-soft);
+                border-color: rgba(196,82,58,0.2);
+            }
+
+            .btn-table-danger:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+        .btn-table-link {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 4px 8px;
+            cursor: pointer;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background .15s;
+        }
+
+            .btn-table-link:hover {
+                background: var(--accent-soft);
+                text-decoration: none;
+            }
+
+        /* Mono cell for prices / IDs */
+        .cell-mono {
+            font-family: 'Geist Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Truncated title */
+        .cell-title {
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        /* Review row content */
+        .review-comment {
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        /* Freelancer select for reviews tab */
+        .review-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+            .review-filter label {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-dim);
+            }
+
+            .review-filter select {
+                padding: 8px 14px;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                font-family: inherit;
+                font-size: 13px;
+                background: var(--bg-1);
+                color: var(--text);
+                appearance: auto;
+                min-width: 200px;
+            }
+
+        /* Skeleton rows */
+        .skel-row td {
+            padding: 14px;
+        }
+
+        .skel-bar {
+            height: 12px;
+            border-radius: 6px;
+            background: var(--bg-2);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Confirm modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(31,42,38,0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 80;
+            display: none;
+            place-items: center;
+        }
+
+            .modal-overlay.show {
+                display: grid;
+                animation: fadeUp .2s ease-out;
+            }
+
+        .modal {
+            background: var(--bg-1);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(31,42,38,0.18);
+            width: 90%;
+            max-width: 420px;
+            padding: 28px;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+            .modal-head h2 {
+                font-size: 18px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: var(--text-dim);
+            transition: background .15s, color .15s;
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+            .modal-close:hover {
+                background: rgba(31,42,38,0.06);
+                color: var(--text);
+            }
+
+        .modal-body {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Star display */
+        .star-display {
+            display: inline-flex;
+            gap: 1px;
+        }
+
+            .star-display svg {
+                width: 14px;
+                height: 14px;
+            }
+
+                .star-display svg.on {
+                    fill: var(--warm-yellow);
+                    stroke: #c9a227;
+                    stroke-width: 1;
+                }
+
+                .star-display svg.off {
+                    fill: var(--bg-2);
+                    stroke: var(--line-strong);
+                    stroke-width: 1;
+                }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-table {
+                font-size: 12px;
+            }
+
+                .admin-table thead th, .admin-table tbody td {
+                    padding: 10px 10px;
+                }
+
+            .cell-title {
+                max-width: 140px;
+            }
+
+            .review-comment {
+                max-width: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+
+        <div id="topnav-mount"></div>
+
+        <section class="hero-section">
+            <div class="eyebrow">Platform Administration</div>
+            <h1>Admin <span class="accent">panel</span></h1>
+            <p class="sub text-dim">View and manage all users, gigs, orders, and reviews on the platform.</p>
+        </section>
+
+        <!-- Tab strip -->
+        <div class="admin-tabs" id="adminTabs">
+            <button class="on" data-tab="users">Users</button>
+            <button data-tab="gigs">Gigs</button>
+            <button data-tab="orders">Orders</button>
+            <button data-tab="reviews">Reviews</button>
+        </div>
+
+        <!-- Section head -->
+        <div class="sec-head" id="secHead" style="display:none;">
+            <h2 id="sectionTitle">Users <span class="count" id="itemCount"></span></h2>
+        </div>
+
+        <!-- Tab panels -->
+        <div id="panelUsers" class="tab-panel"></div>
+        <div id="panelGigs" class="tab-panel" hidden></div>
+        <div id="panelOrders" class="tab-panel" hidden></div>
+        <div id="panelReviews" class="tab-panel" hidden></div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState" hidden>
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2" /><line x1="8" y1="9" x2="16" y2="9" /><line x1="8" y1="13" x2="13" y2="13" /></svg>
+            </div>
+            <h2 id="emptyTitle">Nothing here</h2>
+            <p id="emptyMsg">No data to display.</p>
+        </div>
+
+    </div>
+
+    <!-- Confirm modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-head">
+                <h2 id="confirmTitle">Confirm</h2>
+                <button class="modal-close" id="confirmClose" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="confirmBody">Are you sure?</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="confirmOkBtn" style="background:var(--error);border-color:var(--error);">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

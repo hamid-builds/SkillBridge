@@ -82,6 +82,8 @@ public:
 
     int countUnread(int currentUserID, int receiverID);
 
+    DataList<int> getConversationPartners(int currentUserID, int userID);
+
     void clearCache();
 
     std::size_t cacheSize() const { return conversationCache_.size(); }

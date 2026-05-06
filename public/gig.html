@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Gig detail page on SkillBridge - FAST NUCES Lahore campus marketplace">
+    <title>Gig - SkillBridge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/shared.css">
+
+    <style>
+        /* =========================================================
+           Gig detail page styles. Page-specific only. Card / glass /
+           skeleton / empty-state come from shared.css.
+           ========================================================= */
+
+        /* Defensive: when an element has the `hidden` attribute, the
+           browser's default [hidden]{display:none} rule applies. But
+           any author rule that sets `display:` on that element wins
+           because of source order. We see this exact problem with
+           .closed-banner (display:flex). Force the hidden attribute
+           to win across the page. */
+        [hidden] {
+            display: none !important;
+        }
+
+        /* Back link above the header */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            padding: 6px 0;
+            transition: color .15s;
+        }
+
+            .back-link:hover {
+                color: var(--text);
+            }
+
+            .back-link svg {
+                width: 14px;
+                height: 14px;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+            }
+
+        /* Header strip */
+        .gig-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+            .gig-head .left {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .gig-head .cat-eyebrow {
+                font-family: 'Geist Mono', monospace;
+                font-size: 11px;
+                color: var(--accent);
+                text-transform: uppercase;
+                letter-spacing: 0.18em;
+                font-weight: 500;
+                margin-bottom: 12px;
+            }
+
+            .gig-head h1 {
+                font-size: clamp(28px, 4vw, 44px);
+                font-weight: 600;
+                line-height: 1.1;
+                letter-spacing: -0.025em;
+                color: var(--text);
+                margin-bottom: 14px;
+                word-wrap: break-word;
+            }
+
+            .gig-head .posted {
+                font-family: 'Geist Mono', monospace;
+                font-size: 11px;
+                color: var(--text-faint);
+            }
+
+        /* Inactive banner */
+        .closed-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(245, 214, 138, 0.18);
+            border: 1px solid rgba(245, 214, 138, 0.45);
+            border-radius: 12px;
+            color: #7a5a10;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+            .closed-banner svg {
+                width: 16px;
+                height: 16px;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+                flex-shrink: 0;
+            }
+
+        /* Two-column body */
+        .gig-body {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: 32px;
+            margin-top: 32px;
+        }
+
+        @media (max-width: 879px) {
+            .gig-body {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .gig-body .col-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 0;
+        }
+
+        .gig-body .col-right {
+            position: sticky;
+            top: 24px;
+            align-self: start;
+        }
+
+        @media (max-width: 879px) {
+            .gig-body .col-right {
+                position: static;
+            }
+        }
+
+        /* Section heading inside cards */
+        .card-h {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
+        }
+
+        /* Description block: preserve whitespace, multi-paragraph */
+        .gig-desc {
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* About-the-seller card */
+        .seller-card .row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .seller-card .big-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .seller-card .who {
+            min-width: 0;
+        }
+
+            .seller-card .who .nm {
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 4px;
+                letter-spacing: -0.01em;
+            }
+
+            .seller-card .who .rating-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                color: var(--text-dim);
+                font-family: 'Geist Mono', monospace;
+            }
+
+                .seller-card .who .rating-row .star {
+                    color: var(--warm-yellow);
+                    fill: var(--warm-yellow);
+                    width: 12px;
+                    height: 12px;
+                }
+
+        .seller-card .skills {
+            color: var(--text-dim);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            word-wrap: break-word;
+        }
+
+        .seller-card .view-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            transition: color .15s, gap .15s;
+        }
+
+            .seller-card .view-link:hover {
+                color: var(--accent-hover);
+                gap: 9px;
+            }
+
+            .seller-card .view-link svg {
+                width: 12px;
+                height: 12px;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+            }
+
+        /* Action panel (right column) */
+        .action-panel .price-line {
+            font-family: 'Geist Mono', monospace;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+        }
+
+            .action-panel .price-line .label {
+                display: block;
+                font-size: 10px;
+                color: var(--text-faint);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.16em;
+                margin-bottom: 4px;
+            }
+
+        .action-panel .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            .action-panel .actions .btn {
+                width: 100%;
+                min-height: 44px;
+            }
+
+        .action-panel .btn-danger {
+            background: var(--error);
+            color: #fff;
+        }
+
+            .action-panel .btn-danger:hover:not(:disabled) {
+                transform: translateY(-1px);
+                background: #a73d27;
+                box-shadow: 0 6px 20px rgba(196, 82, 58, 0.25);
+            }
+
+        .action-panel .deact-link {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-faint);
+            margin-top: 6px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 6px;
+            transition: color .15s;
+        }
+
+            .action-panel .deact-link:hover {
+                color: var(--error);
+            }
+
+        .action-panel .no-actions {
+            font-size: 13px;
+            color: var(--text-faint);
+            line-height: 1.5;
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        /* Reviews section */
+        .reviews-block {
+            margin-top: 56px;
+        }
+
+        .reviews-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 22px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+            .reviews-head h2 {
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+                .reviews-head h2 .count {
+                    color: var(--text-faint);
+                    font-weight: 400;
+                    margin-left: 8px;
+                }
+
+            .reviews-head .see-all {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--accent);
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: gap .15s;
+            }
+
+                .reviews-head .see-all:hover {
+                    gap: 9px;
+                }
+
+                .reviews-head .see-all svg {
+                    width: 12px;
+                    height: 12px;
+                    stroke: currentColor;
+                    stroke-width: 2;
+                    fill: none;
+                }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .review-card {
+            padding: 20px;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .review-card .stars-row {
+                display: flex;
+                gap: 2px;
+                margin-bottom: 10px;
+            }
+
+                .review-card .stars-row svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .review-card .stars-row .filled {
+                    color: var(--warm-yellow);
+                    fill: var(--warm-yellow);
+                }
+
+                .review-card .stars-row .empty {
+                    color: var(--line-strong);
+                    fill: var(--bg-2);
+                }
+
+            .review-card .comment {
+                color: var(--text);
+                font-size: 14px;
+                line-height: 1.55;
+                margin-bottom: 14px;
+                word-wrap: break-word;
+            }
+
+            .review-card .meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding-top: 12px;
+                border-top: 1px solid var(--line);
+            }
+
+                .review-card .meta .mini-avatar {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                    display: grid;
+                    place-items: center;
+                    color: #fff;
+                    font-size: 9px;
+                    font-weight: 600;
+                    flex-shrink: 0;
+                }
+
+                .review-card .meta .reviewer-name {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--text);
+                }
+
+                .review-card .meta .ts {
+                    margin-left: auto;
+                    font-family: 'Geist Mono', monospace;
+                    font-size: 10px;
+                    color: var(--text-faint);
+                }
+
+        /* Skeleton variants */
+        .skel-head .h-eye {
+            width: 80px;
+            height: 11px;
+            margin-bottom: 14px;
+        }
+
+        .skel-head .h-title {
+            width: 70%;
+            height: 36px;
+            margin-bottom: 14px;
+        }
+
+        .skel-head .h-date {
+            width: 140px;
+            height: 11px;
+        }
+
+        .skel-desc {
+            padding: 24px;
+        }
+
+            .skel-desc .l {
+                height: 12px;
+                margin-bottom: 10px;
+            }
+
+            .skel-desc .l1 {
+                width: 100%;
+            }
+
+            .skel-desc .l2 {
+                width: 95%;
+            }
+
+            .skel-desc .l3 {
+                width: 85%;
+            }
+
+            .skel-desc .l4 {
+                width: 60%;
+            }
+
+        .skel-action .price-skel {
+            height: 32px;
+            width: 60%;
+            margin-bottom: 18px;
+        }
+
+        .skel-action .btn-skel {
+            height: 44px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 599px) {
+            .gig-head {
+                margin-bottom: 14px;
+            }
+
+            .gig-body {
+                margin-top: 24px;
+            }
+
+            .reviews-block {
+                margin-top: 40px;
+            }
+
+            .seller-card .big-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 16px;
+            }
+
+            .action-panel .price-line {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+
+        <!-- Floating glass nav -->
+        <div id="topnav-mount"></div>
+
+        <!-- Page contents go inside this container so we can replace
+             everything with an empty state if the gig is not found. -->
+        <div id="pageBody">
+
+            <!-- Back link -->
+            <a href="/browse.html" class="back-link" id="backLink">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back to gigs
+            </a>
+
+            <!-- Loading skeleton (replaced when data arrives) -->
+            <div id="loadingState">
+                <div class="skel-head">
+                    <div class="skeleton h-eye"></div>
+                    <div class="skeleton h-title"></div>
+                    <div class="skeleton h-date"></div>
+                </div>
+                <div class="gig-body">
+                    <div class="col-left">
+                        <div class="glass-card skel-desc">
+                            <div class="skeleton l l1"></div>
+                            <div class="skeleton l l2"></div>
+                            <div class="skeleton l l3"></div>
+                            <div class="skeleton l l4"></div>
+                        </div>
+                        <div class="glass-card skel-desc">
+                            <div class="skeleton l l1"></div>
+                            <div class="skeleton l l3"></div>
+                        </div>
+                    </div>
+                    <div class="col-right">
+                        <div class="glass-card skel-action">
+                            <div class="skeleton price-skel"></div>
+                            <div class="skeleton btn-skel"></div>
+                            <div class="skeleton btn-skel"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real content (filled by gig.js) -->
+            <div id="contentRoot" hidden>
+
+                <!-- Inactive banner (shown only when gig.isActive === false) -->
+                <div id="closedBanner" class="closed-banner" hidden>
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                    </svg>
+                    <span>This gig is no longer accepting orders.</span>
+                </div>
+
+                <!-- Header strip -->
+                <div class="gig-head">
+                    <div class="left">
+                        <div class="cat-eyebrow" id="gigCategory"></div>
+                        <h1 id="gigTitle"></h1>
+                        <div class="posted" id="gigPosted"></div>
+                    </div>
+                </div>
+
+                <!-- Two-column body -->
+                <div class="gig-body">
+
+                    <div class="col-left">
+                        <!-- About this gig -->
+                        <div class="glass-card">
+                            <h3 class="card-h">About this gig</h3>
+                            <div class="gig-desc" id="gigDesc"></div>
+                        </div>
+
+                        <!-- About the seller -->
+                        <div class="glass-card seller-card">
+                            <h3 class="card-h">About the seller</h3>
+                            <div class="row">
+                                <div class="big-avatar" id="sellerAvatar"></div>
+                                <div class="who">
+                                    <div class="nm" id="sellerName"></div>
+                                    <div class="rating-row" id="sellerRating"></div>
+                                </div>
+                            </div>
+                            <div class="skills" id="sellerSkills"></div>
+                            <a class="view-link" id="sellerProfileLink">
+                                View profile
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-right">
+                        <div class="glass-card action-panel" id="actionPanel">
+                            <div class="price-line">
+                                <span class="label">Price</span>
+                                <span id="gigPrice"></span>
+                            </div>
+                            <div class="actions" id="actionButtons"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Reviews section -->
+                <section class="reviews-block">
+                    <div class="reviews-head">
+                        <h2>Reviews of this seller <span class="count" id="reviewCount"></span></h2>
+                        <a class="see-all" id="seeAllReviews" hidden>
+                            See all reviews
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="reviews-list" id="reviewsList"></div>
+
+                    <!-- Empty state, inline -->
+                    <section id="reviewsEmpty" class="empty-state" hidden>
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                            </svg>
+                        </div>
+                        <h2>No reviews yet</h2>
+                        <p>This seller has not received any reviews so far.</p>
+                    </section>
+                </section>
+
+            </div>
+
+            <!-- 404 / not found state (shown when the gig endpoint 404s) -->
+            <section id="notFoundState" class="empty-state" hidden style="padding-top: 120px;">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                </div>
+                <h2>Gig not found</h2>
+                <p>This gig does not exist or has been removed.</p>
+                <a href="/browse.html" class="btn btn-primary">Back to browse</a>
+            </section>
+
+        </div>
+
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/gig.js"></script>
+
+</body>
+</html>

@@ -36,8 +36,9 @@ public:
     DataList<TrustedUser> getTrustedNear(int currentUserID, int maxHops = 2) const;
 
    
-    DataList<Endorsement> getEndorsementsFor(int currentUserID,
-        int targetUserID) const;
+    DataList<Endorsement> getEndorsementsFor(int currentUserID, int targetUserID) const;
+
+    DataList<Endorsement> getEndorsementsBy(int currentUserID, int fromUserID) const;
 
     void clearGraph();
 

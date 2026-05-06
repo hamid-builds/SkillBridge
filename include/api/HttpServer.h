@@ -3,6 +3,10 @@
 
 #include <string>
 
+namespace httplib 
+{
+    struct Request; struct Response; 
+}
 class UserManager;
 class GigManager;
 class OrderManager;
@@ -15,7 +19,6 @@ namespace sb
 {
     namespace api 
     {
-
         struct AppContext 
         {
             UserManager* userManager;
@@ -49,9 +52,18 @@ namespace sb
             void registerHealthRoutes();
             void registerStaticFiles();
             void registerAuthRoutes();
+            void registerGigRoutes();    
+            void registerReviewRoutes(); 
+            void registerUserRoutes();   
+            void registerOrderRoutes();  
+            void registerMessageRoutes(); 
+            void registerEndorsementRoutes(); 
+            void registerAdminRoutes();       
+
+            int requireAuth(const httplib::Request& req, httplib::Response& res);
         };
 
-    }
+    } 
 }
 
 #endif

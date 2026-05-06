@@ -198,6 +198,7 @@
     <ClInclude Include="include\core\Exceptions.h" />
     <ClInclude Include="include\core\Freelancer.h" />
     <ClInclude Include="include\core\Gig.h" />
+    <ClInclude Include="include\core\GigBrowseFilter.h" />
     <ClInclude Include="include\core\GigCategory.h" />
     <ClInclude Include="include\core\Message.h" />
     <ClInclude Include="include\core\Order.h" />
@@ -260,7 +261,27 @@
     <ClInclude Include="include\utils\Tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="public\admin.html" />
+    <None Include="public\browse.html" />
+    <None Include="public\css\shared.css" />
+    <None Include="public\endorsements.html" />
+    <None Include="public\gig-edit.html" />
+    <None Include="public\gig.html" />
     <None Include="public\index.html" />
+    <None Include="public\js\admin.js" />
+    <None Include="public\js\browse.js" />
+    <None Include="public\js\endorsements.js" />
+    <None Include="public\js\gig-edit.js" />
+    <None Include="public\js\gig.js" />
+    <None Include="public\js\messages.js" />
+    <None Include="public\js\orders.js" />
+    <None Include="public\js\profile.js" />
+    <None Include="public\js\search.js" />
+    <None Include="public\js\shared.js" />
+    <None Include="public\messages.html" />
+    <None Include="public\orders.html" />
+    <None Include="public\profile.html" />
+    <None Include="public\search.html" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

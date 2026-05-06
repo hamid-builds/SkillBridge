@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Profile on SkillBridge - FAST NUCES Lahore campus marketplace">
+    <title>Profile - SkillBridge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/shared.css">
+
+    <style>
+        [hidden] {
+            display: none !important;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            padding: 6px 0;
+            transition: color .15s;
+        }
+
+            .back-link:hover {
+                color: var(--text);
+            }
+
+            .back-link svg {
+                width: 14px;
+                height: 14px;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+            }
+
+        /* ----- Profile header ----- */
+        .profile-head {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+            .profile-head .big-avatar {
+                width: 96px;
+                height: 96px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                display: grid;
+                place-items: center;
+                color: #fff;
+                font-size: 32px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .profile-head .who {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .profile-head .nm {
+                font-size: clamp(24px, 3.5vw, 32px);
+                font-weight: 600;
+                line-height: 1.1;
+                letter-spacing: -0.025em;
+                color: var(--text);
+                margin-bottom: 8px;
+                word-wrap: break-word;
+            }
+
+            .profile-head .role-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-bottom: 8px;
+            }
+
+            .profile-head .role-pill {
+                padding: 4px 12px;
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 999px;
+                font-size: 11px;
+                font-weight: 600;
+                font-family: 'Geist Mono', monospace;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+
+                .profile-head .role-pill.admin {
+                    background: rgba(196, 82, 58, 0.10);
+                    color: var(--error);
+                }
+
+            .profile-head .joined {
+                font-family: 'Geist Mono', monospace;
+                font-size: 11px;
+                color: var(--text-faint);
+            }
+
+            .profile-head .rating-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                color: var(--text-dim);
+                font-family: 'Geist Mono', monospace;
+                margin-top: 4px;
+            }
+
+                .profile-head .rating-row .star {
+                    color: var(--warm-yellow);
+                    fill: var(--warm-yellow);
+                    width: 14px;
+                    height: 14px;
+                }
+
+        @media (max-width: 599px) {
+            .profile-head {
+                padding: 22px;
+                gap: 16px;
+            }
+
+                .profile-head .big-avatar {
+                    width: 72px;
+                    height: 72px;
+                    font-size: 24px;
+                }
+        }
+
+        /* ----- Section card ----- */
+        .section-card {
+            padding: 28px;
+            margin-bottom: 18px;
+        }
+
+            .section-card h3 {
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 14px;
+                letter-spacing: -0.01em;
+            }
+
+            .section-card .body-text {
+                color: var(--text);
+                font-size: 14px;
+                line-height: 1.65;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+
+            .section-card .empty-text {
+                color: var(--text-faint);
+                font-size: 13px;
+                font-style: italic;
+            }
+
+        /* ----- Skills chips ----- */
+        .skills-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+            .skills-chips .chip {
+                padding: 5px 12px;
+                background: var(--bg-2);
+                border: 1px solid var(--line);
+                color: var(--text);
+                border-radius: 999px;
+                font-size: 12px;
+                font-family: 'Geist Mono', monospace;
+            }
+
+        /* ----- Section header above grid/list ----- */
+        .sub-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 32px 0 16px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+            .sub-head h2 {
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+                .sub-head h2 .count {
+                    color: var(--text-faint);
+                    font-weight: 400;
+                    margin-left: 8px;
+                }
+
+        /* ----- Reviews list (reuses gig.html review-card pattern) ----- */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .review-card {
+            padding: 20px;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .review-card .stars-row {
+                display: flex;
+                gap: 2px;
+                margin-bottom: 10px;
+            }
+
+                .review-card .stars-row svg {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .review-card .stars-row .filled {
+                    color: var(--warm-yellow);
+                    fill: var(--warm-yellow);
+                }
+
+                .review-card .stars-row .empty {
+                    color: var(--line-strong);
+                    fill: var(--bg-2);
+                }
+
+            .review-card .comment {
+                color: var(--text);
+                font-size: 14px;
+                line-height: 1.55;
+                margin-bottom: 14px;
+                word-wrap: break-word;
+            }
+
+            .review-card .meta {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding-top: 12px;
+                border-top: 1px solid var(--line);
+            }
+
+                .review-card .meta .mini-avatar {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                    display: grid;
+                    place-items: center;
+                    color: #fff;
+                    font-size: 9px;
+                    font-weight: 600;
+                    flex-shrink: 0;
+                }
+
+                .review-card .meta .reviewer-name {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--text);
+                }
+
+                .review-card .meta .ts {
+                    margin-left: auto;
+                    font-family: 'Geist Mono', monospace;
+                    font-size: 10px;
+                    color: var(--text-faint);
+                }
+
+        /* ----- Account section ----- */
+        .account-section {
+            margin-top: 56px;
+        }
+
+            .account-section .section-card {
+                margin-bottom: 14px;
+            }
+
+            .account-section .field-help {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 6px;
+                font-size: 11px;
+                font-family: 'Geist Mono', monospace;
+                color: var(--text-faint);
+            }
+
+        .danger-zone {
+            border-color: rgba(196, 82, 58, 0.30);
+        }
+
+            .danger-zone h3 {
+                color: var(--error);
+            }
+
+            .danger-zone p {
+                color: var(--text-dim);
+                font-size: 13px;
+                line-height: 1.55;
+                margin-bottom: 16px;
+            }
+
+        .btn-danger {
+            background: var(--error);
+            color: #fff;
+        }
+
+            .btn-danger:hover:not(:disabled) {
+                transform: translateY(-1px);
+                background: #a73d27;
+                box-shadow: 0 6px 20px rgba(196, 82, 58, 0.25);
+            }
+
+        /* ----- Modal ----- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(31, 42, 38, 0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 200;
+            display: grid;
+            place-items: center;
+            padding: 16px;
+            animation: fadeUp .2s ease-out;
+        }
+
+        .modal {
+            background: rgba(254, 253, 250, 0.98);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 24px 60px rgba(31, 42, 38, 0.22);
+            max-width: 440px;
+            width: 100%;
+        }
+
+            .modal h3 {
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 8px;
+            }
+
+            .modal p {
+                color: var(--text-dim);
+                font-size: 13px;
+                line-height: 1.55;
+                margin-bottom: 18px;
+            }
+
+            .modal .actions {
+                display: flex;
+                gap: 8px;
+                justify-content: flex-end;
+                margin-top: 14px;
+            }
+
+        @media (max-width: 599px) {
+            .section-card {
+                padding: 22px;
+            }
+
+            .sub-head {
+                margin: 24px 0 12px;
+            }
+        }
+
+        /* ----- Endorsements received ----- */
+        .endorsements-recv-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .endorse-recv-card {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .endorse-recv-card .mini-avatar {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                display: grid;
+                place-items: center;
+                color: #fff;
+                font-size: 9px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .endorse-recv-card .e-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .endorse-recv-card .e-who {
+                font-size: 13px;
+                color: var(--text);
+            }
+
+                .endorse-recv-card .e-who a {
+                    color: var(--accent);
+                    text-decoration: none;
+                    font-weight: 500;
+                }
+
+                    .endorse-recv-card .e-who a:hover {
+                        text-decoration: underline;
+                    }
+
+            .endorse-recv-card .e-when {
+                font-size: 11px;
+                color: var(--text-faint);
+                font-family: 'Geist Mono', monospace;
+                margin-top: 2px;
+            }
+
+            .endorse-recv-card .skill-chip {
+                padding: 3px 10px;
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 999px;
+                font-size: 11px;
+                font-family: 'Geist Mono', monospace;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+        <div id="topnav-mount"></div>
+
+        <div id="pageBody">
+
+            <a href="/browse.html" class="back-link" id="backLink">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                <span id="backLabel">Back to gigs</span>
+            </a>
+
+            <!-- Loading skeleton -->
+            <div id="loadingState">
+                <div class="glass-card profile-head">
+                    <div class="skeleton" style="width:96px;height:96px;border-radius:50%;flex-shrink:0;"></div>
+                    <div style="flex:1;">
+                        <div class="skeleton" style="width:55%;height:28px;margin-bottom:14px;"></div>
+                        <div class="skeleton" style="width:30%;height:14px;"></div>
+                    </div>
+                </div>
+                <div class="glass-card section-card">
+                    <div class="skeleton" style="width:100%;height:14px;margin-bottom:8px;"></div>
+                    <div class="skeleton" style="width:80%;height:14px;"></div>
+                </div>
+            </div>
+
+            <!-- Real content -->
+            <div id="contentRoot" hidden>
+
+                <!-- Header card -->
+                <div class="glass-card profile-head">
+                    <div class="big-avatar" id="hAvatar"></div>
+                    <div class="who">
+                        <div class="nm" id="hName"></div>
+                        <div class="role-row">
+                            <span class="role-pill" id="hRole"></span>
+                            <span class="joined" id="hJoined"></span>
+                        </div>
+                        <div class="rating-row" id="hRating" hidden></div>
+                        <button class="btn btn-primary" id="btnEndorse" hidden style="margin-top:12px;font-size:13px;padding:8px 20px;">Endorse this freelancer</button>
+                    </div>
+                </div>
+
+                <!-- Freelancer-only: portfolio + skills cards -->
+                <div id="freelancerSections" hidden>
+                    <div class="glass-card section-card">
+                        <h3>Portfolio</h3>
+                        <div id="portfolioBody" class="body-text"></div>
+                    </div>
+
+                    <div class="glass-card section-card">
+                        <h3>Skills</h3>
+                        <div id="skillsBody"></div>
+                    </div>
+
+                    <!-- Active gigs -->
+                    <div class="sub-head">
+                        <h2>Active gigs <span class="count" id="gigsCount"></span></h2>
+                    </div>
+                    <section id="gigsGrid" class="gig-grid"></section>
+                    <section id="gigsEmpty" class="empty-state" hidden>
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M9 9h6v6H9z" />
+                            </svg>
+                        </div>
+                        <h2 id="gigsEmptyTitle">No active gigs yet</h2>
+                        <p id="gigsEmptyMsg">No gigs to show right now.</p>
+                        <div id="gigsEmptyAction"></div>
+                    </section>
+
+                    <!-- Reviews -->
+                    <div class="sub-head">
+                        <h2>Reviews <span class="count" id="reviewsCount"></span></h2>
+                    </div>
+                    <div id="reviewsList" class="reviews-list"></div>
+                    <section id="reviewsEmpty" class="empty-state" hidden>
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                            </svg>
+                        </div>
+                        <h2>No reviews yet</h2>
+                        <p>This freelancer has not received any reviews so far.</p>
+                    </section>
+
+                    <!-- Endorsements received -->
+                    <div class="sub-head">
+                        <h2>Endorsements <span class="count" id="endorseCount"></span></h2>
+                    </div>
+                    <div id="endorseList" class="endorsements-recv-list"></div>
+                    <section id="endorseEmpty" class="empty-state" hidden>
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" />
+                                <path d="M1 15h4V9H1z" fill="none" />
+                            </svg>
+                        </div>
+                        <h2>No endorsements yet</h2>
+                        <p>This freelancer has not received any skill endorsements so far.</p>
+                    </section>
+                </div>
+
+                <!-- Account section: own profile only -->
+                <div id="accountSection" class="account-section" hidden>
+                    <div class="sub-head">
+                        <h2>Account settings</h2>
+                    </div>
+
+                    <!-- Edit profile -->
+                    <div class="glass-card section-card">
+                        <h3>Profile details</h3>
+                        <div class="form-grid" style="display:flex;flex-direction:column;gap:18px;">
+                            <div class="field">
+                                <label for="acName">Name</label>
+                                <input id="acName" type="text" maxlength="100" autocomplete="off">
+                            </div>
+                            <div class="field" id="acPortfolioWrap" hidden>
+                                <label for="acPortfolio">Portfolio</label>
+                                <textarea id="acPortfolio" rows="4" placeholder="Describe what you offer."></textarea>
+                            </div>
+                            <div class="field" id="acSkillsWrap" hidden>
+                                <label for="acSkills">Skills</label>
+                                <input id="acSkills" type="text" placeholder="e.g. logo, branding, illustration" autocomplete="off">
+                                <div class="field-help">
+                                    <span>Comma-separated.</span>
+                                </div>
+                            </div>
+                            <div class="error-banner" id="profileErrBanner"></div>
+                            <div>
+                                <button type="button" class="btn btn-primary" id="btnSaveProfile">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Change password -->
+                    <div class="glass-card section-card">
+                        <h3>Change password</h3>
+                        <div class="form-grid" style="display:flex;flex-direction:column;gap:18px;">
+                            <div class="field">
+                                <label for="pwOld">Current password</label>
+                                <input id="pwOld" type="password" autocomplete="current-password">
+                            </div>
+                            <div class="field">
+                                <label for="pwNew">New password</label>
+                                <input id="pwNew" type="password" autocomplete="new-password">
+                                <div class="field-help">
+                                    <span>At least 8 characters with one letter and one digit.</span>
+                                </div>
+                            </div>
+                            <div class="error-banner" id="pwErrBanner"></div>
+                            <div>
+                                <button type="button" class="btn btn-primary" id="btnChangePw">Change password</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete account -->
+                    <div class="glass-card section-card danger-zone">
+                        <h3>Delete account</h3>
+                        <p>This permanently removes your account, your gigs, your orders, and your reviews. This action cannot be undone.</p>
+                        <button type="button" class="btn btn-danger" id="btnDelete">Delete my account</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Not found state -->
+            <section id="notFoundState" class="empty-state" hidden style="padding-top: 120px;">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                </div>
+                <h2>User not found</h2>
+                <p>This user does not exist or has been removed.</p>
+                <a href="/browse.html" class="btn btn-primary">Back to browse</a>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Endorse modal -->
+    <div id="endorseModal" class="modal-backdrop" hidden>
+        <div class="modal">
+            <h3>Endorse freelancer</h3>
+            <p>Endorse a specific skill. This feeds into the platform's trust graph and PageRank rankings.</p>
+            <div class="field">
+                <label for="emSkill">Skill</label>
+                <input id="emSkill" type="text" placeholder="e.g. Python, Logo Design" autocomplete="off" maxlength="50">
+            </div>
+            <div class="field" style="margin-top:14px;">
+                <label for="emWeight">Weight (1 to 10)</label>
+                <input id="emWeight" type="range" min="1" max="10" value="1" style="width:100%;">
+                <div style="display:flex;justify-content:space-between;font-family:'Geist Mono',monospace;font-size:10px;color:var(--text-faint);margin-top:4px;">
+                    <span>1 (light)</span>
+                    <span id="emWeightVal">1</span>
+                    <span>10 (strong)</span>
+                </div>
+            </div>
+            <div class="error-banner" id="emErrBanner" style="margin-top:10px;"></div>
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" id="emCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="emConfirm">Endorse</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete confirmation modal -->
+    <div id="deleteModal" class="modal-backdrop" hidden>
+        <div class="modal">
+            <h3>Delete your account?</h3>
+            <p>Type your password to confirm. This permanently removes your account and all your data.</p>
+            <div class="field">
+                <label for="dmPassword">Password</label>
+                <input id="dmPassword" type="password" autocomplete="current-password">
+            </div>
+            <div class="error-banner" id="dmErrBanner" style="margin-top:10px;"></div>
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" id="dmCancel">Cancel</button>
+                <button type="button" class="btn btn-danger" id="dmConfirm">Delete account</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/profile.js"></script>
+
+</body>
+</html>

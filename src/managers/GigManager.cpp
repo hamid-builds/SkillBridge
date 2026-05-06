@@ -155,6 +155,30 @@ void GigManager::deactivateGig(int currentUserID, int gigID) {
     unindexGig(gigID);
 }
 
+void GigManager::setGigActive(int currentUserID, int gigID, bool active) {
+    User* user = loadUser(currentUserID);
+    Gig existing = gigRepo_->findGigByID(gigID);
+
+    try {
+        requireOwnerOrAdmin(user, existing);
+    }
+    catch (...) {
+        delete user;
+        throw;
+    }
+    delete user;
+
+    gigRepo_->setGigActive(gigID, active);
+
+    if (active) {
+        Gig refreshed = gigRepo_->findGigByID(gigID);
+        indexGig(refreshed);
+    }
+    else {
+        unindexGig(gigID);
+    }
+}
+
 void GigManager::deleteGig(int currentUserID, int gigID) {
     User* user = loadUser(currentUserID);
 
@@ -331,4 +355,8 @@ void GigManager::rebuildIndexes() {
 
 int GigManager::getVocabularySize() const {
     return trie_.size();
+}
+
+DataList<Gig> GigManager::findActiveGigsForBrowse(const GigBrowseFilter& filter, GigSortOrder sort) const {
+    return gigRepo_->findActiveGigsFiltered(filter, sort);
 }

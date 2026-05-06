@@ -266,3 +266,30 @@ int SQLiteMessageRepository::countUnread(int receiverID) const {
     sqlite3_finalize(stmt);
     return count;
 }
+
+DataList<int> SQLiteMessageRepository::findConversationPartners(int userID) const {
+    const char* sql =
+        "SELECT DISTINCT partner FROM ("
+        "  SELECT receiverID AS partner FROM messages WHERE senderID = ?"
+        "  UNION"
+        "  SELECT senderID AS partner FROM messages WHERE receiverID = ?"
+        ")";
+
+    sqlite3* db = DatabaseManager::getInstance().getConnection();
+    sqlite3_stmt* stmt = nullptr;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        throwPrepareError(sql);
+    }
+
+    sqlite3_bind_int(stmt, 1, userID);
+    sqlite3_bind_int(stmt, 2, userID);
+
+    DataList<int> partners;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        partners.add(sqlite3_column_int(stmt, 0));
+    }
+
+    sqlite3_finalize(stmt);
+    return partners;
+}

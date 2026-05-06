@@ -1,9 +1,9 @@
 
 
-
-#include "../../include/managers/ReviewManager.h"
-#include "../../include/core/Exceptions.h"
-#include "../../include/core/User.h"
+#include "managers/ReviewManager.h"
+#include "core/Exceptions.h"
+#include "core/User.h"
+#include "core/Freelancer.h"
 #include <ctime>
 #include <cstdio>
 #include <string>
@@ -51,6 +51,17 @@ Review ReviewManager::submitReview(int currentUserID,
     review.setCreatedAt(currentTimestamp());
 
     reviewRepo_.saveReview(review);
+
+    double newAvg = reviewRepo_.averageRating(order.getSellerID());
+    User* seller = userRepo_.findUserByID(order.getSellerID());
+    if (seller) {
+        Freelancer* f = dynamic_cast<Freelancer*>(seller);
+        if (f) {
+            f->updateAvgRating(newAvg);
+            userRepo_.updateUser(f);
+        }
+        delete seller;
+    }
 
     return review;
 }

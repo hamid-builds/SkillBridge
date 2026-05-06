@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - SkillBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/shared.css">
+    <style>
+        .hero-section {
+            margin-bottom: 32px;
+        }
+
+            .hero-section .sub {
+                max-width: 56ch;
+            }
+
+        /* Split pane container */
+        .msg-layout {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 0;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            background: rgba(254, 253, 250, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 8px 32px rgba(31,42,38,0.06);
+            min-height: 520px;
+            max-height: calc(100vh - 220px);
+        }
+
+        /* Left pane: inbox list */
+        .inbox-pane {
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .inbox-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--line);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            flex-shrink: 0;
+        }
+
+        .inbox-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .inbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--line);
+            cursor: pointer;
+            transition: background .12s;
+            text-align: left;
+            width: 100%;
+            background: transparent;
+            color: inherit;
+            font-family: inherit;
+            border: none;
+            border-radius: 0;
+        }
+
+            .inbox-item:hover {
+                background: rgba(31,42,38,0.03);
+            }
+
+            .inbox-item.active {
+                background: var(--accent-soft);
+            }
+
+            .inbox-item .mini-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                color: #fff;
+                font-size: 12px;
+                font-weight: 600;
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                letter-spacing: 0;
+            }
+
+            .inbox-item .inbox-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .inbox-item .inbox-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .inbox-item .inbox-preview {
+                font-size: 12px;
+                color: var(--text-dim);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-top: 1px;
+            }
+
+            .inbox-item .inbox-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+                flex-shrink: 0;
+            }
+
+            .inbox-item .inbox-time {
+                font-size: 10px;
+                color: var(--text-faint);
+                font-family: 'Geist Mono', monospace;
+                white-space: nowrap;
+            }
+
+        .inbox-badge {
+            display: inline-grid;
+            place-items: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 999px;
+            font-family: 'Geist Mono', monospace;
+        }
+
+        /* Right pane: conversation */
+        .conv-pane {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .conv-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+            .conv-header .back-btn {
+                display: none;
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+                place-items: center;
+                color: var(--text-dim);
+                transition: background .12s;
+            }
+
+                .conv-header .back-btn:hover {
+                    background: rgba(31,42,38,0.06);
+                }
+
+            .conv-header .conv-name {
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            .conv-header .conv-profile {
+                margin-left: auto;
+                font-size: 12px;
+                color: var(--accent);
+            }
+
+                .conv-header .conv-profile:hover {
+                    text-decoration: underline;
+                }
+
+        /* Message bubbles */
+        .conv-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .msg-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.45;
+            word-wrap: break-word;
+            animation: fadeUp .2s ease-out;
+        }
+
+            .msg-bubble.mine {
+                align-self: flex-end;
+                background: var(--accent);
+                color: #fff;
+                border-bottom-right-radius: 4px;
+            }
+
+            .msg-bubble.theirs {
+                align-self: flex-start;
+                background: rgba(254, 253, 250, 0.9);
+                border: 1px solid var(--line);
+                color: var(--text);
+                border-bottom-left-radius: 4px;
+            }
+
+        .msg-time {
+            font-size: 10px;
+            margin-top: 3px;
+            font-family: 'Geist Mono', monospace;
+        }
+
+        .msg-bubble.mine .msg-time {
+            color: rgba(255,255,255,0.65);
+            text-align: right;
+        }
+
+        .msg-bubble.theirs .msg-time {
+            color: var(--text-faint);
+        }
+
+        /* Compose bar */
+        .compose-bar {
+            padding: 12px 16px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+            .compose-bar textarea {
+                flex: 1;
+                resize: none;
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 10px 14px;
+                font-size: 13px;
+                font-family: inherit;
+                color: var(--text);
+                background: rgba(255,255,255,0.7);
+                outline: none;
+                min-height: 40px;
+                max-height: 120px;
+                transition: border-color .2s, box-shadow .2s;
+                line-height: 1.4;
+            }
+
+                .compose-bar textarea:focus {
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 3px var(--accent-glow);
+                    background: #fff;
+                }
+
+                .compose-bar textarea::placeholder {
+                    color: var(--text-faint);
+                }
+
+        .compose-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            transition: transform .15s, background .2s, box-shadow .2s;
+        }
+
+            .compose-send:hover {
+                transform: translateY(-1px);
+                background: var(--accent-hover);
+                box-shadow: 0 6px 20px var(--accent-glow);
+            }
+
+            .compose-send:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .compose-send svg {
+                width: 18px;
+                height: 18px;
+            }
+
+        /* Empty / placeholder states */
+        .conv-empty {
+            flex: 1;
+            display: grid;
+            place-items: center;
+            order: 1;
+            color: var(--text-faint);
+            font-size: 14px;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .conv-messages {
+            order: 2;
+        }
+
+        .compose-bar {
+            order: 3;
+        }
+
+        .conv-empty svg {
+            width: 48px;
+            height: 48px;
+            stroke: var(--accent-soft);
+            fill: none;
+            stroke-width: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .inbox-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-faint);
+            font-size: 13px;
+        }
+
+        /* Skeleton */
+        .skel-inbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--line);
+        }
+
+            .skel-inbox-item .si-av {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+            }
+
+            .skel-inbox-item .si-info {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .skel-inbox-item .si-n {
+                width: 60%;
+                height: 12px;
+            }
+
+            .skel-inbox-item .si-p {
+                width: 85%;
+                height: 10px;
+            }
+
+        /* Mobile: show one pane at a time */
+        @media (max-width: 759px) {
+            .msg-layout {
+                grid-template-columns: 1fr;
+                min-height: 400px;
+                max-height: calc(100vh - 180px);
+            }
+
+            .inbox-pane {
+                display: flex;
+            }
+
+            .conv-pane {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .msg-layout.conv-open .inbox-pane {
+                display: none;
+            }
+
+            .msg-layout.conv-open .conv-pane {
+                display: flex;
+            }
+
+            .conv-header .back-btn {
+                display: grid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+
+        <div id="topnav-mount"></div>
+
+        <section class="hero-section">
+            <div class="eyebrow">Messaging</div>
+            <h1>Your <span class="accent">messages</span></h1>
+            <p class="sub text-dim">Chat with clients and freelancers. All messages are compressed with Huffman coding.</p>
+        </section>
+
+        <div class="msg-layout" id="msgLayout">
+            <!-- Left: inbox -->
+            <div class="inbox-pane">
+                <div class="inbox-header">Conversations</div>
+                <div class="inbox-list" id="inboxList"></div>
+            </div>
+
+            <!-- Right: conversation -->
+            <div class="conv-pane" id="convPane">
+                <div class="conv-header" id="convHeader">
+                    <button class="back-btn" id="backBtn" aria-label="Back to inbox">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polyline points="15 18 9 12 15 6" /></svg>
+                    </button>
+                    <span class="conv-name" id="convName">Select a conversation</span>
+                    <a class="conv-profile" id="convProfileLink" href="#" hidden>View profile</a>
+                </div>
+
+                <div class="conv-empty" id="convEmpty">
+                    <div>
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                        <div id="convEmptyText">Select a conversation to start chatting</div>
+                    </div>
+                </div>
+                <div class="conv-messages" id="convMessages"></div>
+
+                <div class="compose-bar" id="composeBar" hidden>
+                    <textarea id="composeInput" placeholder="Type a message..." rows="1"></textarea>
+                    <button class="compose-send" id="composeSend" aria-label="Send">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="/js/shared.js"></script>
+    <script src="/js/messages.js"></script>
+</body>
+</html>

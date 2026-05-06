@@ -59,6 +59,15 @@ public:
     
     User* findUserByID(int userID) const;
 
+    bool updateProfileForUser(int userID, const std::string& newName);
+
+    bool updateFreelancerFields(int userID, const std::string& portfolio, const std::string& skills);
+
+    bool changePasswordForUser(int userID, const std::string& oldPassword, const std::string& newPassword);
+
+    bool deleteAccountForUser(int userID, const std::string& plaintextPassword);
+
+
     User* getCurrentUser() const 
     {
         return currentUser_; 

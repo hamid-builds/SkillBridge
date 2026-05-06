@@ -1,6 +1,7 @@
 #include "managers/UserManager.h"
 #include "managers/UserFactory.h"
 #include "core/User.h"
+#include "core/Freelancer.h"
 #include "core/Exceptions.h"
 
 #include <stdexcept>
@@ -348,4 +349,94 @@ User* UserManager::authenticate(const string& email, const string& plaintextPass
 User* UserManager::findUserByID(int userID) const 
 {
     return repo_->findUserByID(userID);
+}
+
+bool UserManager::updateProfileForUser(int userID, const string& newName) {
+    validateName(newName);
+
+    User* u = repo_->findUserByID(userID);
+    if (!u) {
+        throw AuthenticationException(
+            "user not found: id=" + to_string(userID));
+    }
+
+    u->setName(newName);
+    bool ok = repo_->updateUser(u);
+    delete u;
+    return ok;
+}
+
+bool UserManager::updateFreelancerFields(int userID,
+    const string& portfolio,
+    const string& skills) {
+    User* u = repo_->findUserByID(userID);
+    if (!u) {
+        throw AuthenticationException(
+            "user not found: id=" + to_string(userID));
+    }
+
+    Freelancer* f = dynamic_cast<Freelancer*>(u);
+    if (!f) {
+        delete u;
+        throw UnauthorizedException(
+            "only freelancers can update portfolio or skills");
+    }
+
+    try {
+        f->setPortfolio(portfolio);
+        f->setSkills(skills);
+    }
+    catch (...) {
+        delete u;
+        throw;
+    }
+
+    bool ok = repo_->updateUser(u);
+    delete u;
+    return ok;
+}
+
+bool UserManager::changePasswordForUser(int userID,
+    const string& oldPassword,
+    const string& newPassword) {
+    User* u = repo_->findUserByID(userID);
+    if (!u) {
+        throw AuthenticationException(
+            "user not found: id=" + to_string(userID));
+    }
+
+    if (!hasher_->verify(oldPassword, u->getPasswordHash())) {
+        delete u;
+        throw AuthenticationException("old password is incorrect");
+    }
+
+    try {
+        validatePassword(newPassword);
+    }
+    catch (...) {
+        delete u;
+        throw;
+    }
+
+    u->setPasswordHash(hasher_->hash(newPassword));
+    bool ok = repo_->updateUser(u);
+    delete u;
+    return ok;
+}
+
+bool UserManager::deleteAccountForUser(int userID,
+    const string& plaintextPassword) {
+    User* u = repo_->findUserByID(userID);
+    if (!u) {
+        throw AuthenticationException(
+            "user not found: id=" + to_string(userID));
+    }
+
+    if (!hasher_->verify(plaintextPassword, u->getPasswordHash())) {
+        delete u;
+        throw AuthenticationException("password verification failed");
+    }
+
+    delete u;
+    return repo_->deleteUser(userID);
 }

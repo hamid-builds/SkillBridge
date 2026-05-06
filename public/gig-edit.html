@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Create or edit a gig on SkillBridge - FAST NUCES Lahore campus marketplace">
+    <title>New gig - SkillBridge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/shared.css">
+
+    <style>
+        /* =========================================================
+           Gig edit page styles. Page-specific only. Field / button
+           styles come from shared.css.
+           ========================================================= */
+
+        /* Defensive: ensure [hidden] always wins over author display
+           rules (same fix we shipped in gig.html). */
+        [hidden] {
+            display: none !important;
+        }
+
+        /* Back link above the header */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            padding: 6px 0;
+            transition: color .15s;
+        }
+
+            .back-link:hover {
+                color: var(--text);
+            }
+
+            .back-link svg {
+                width: 14px;
+                height: 14px;
+                stroke: currentColor;
+                stroke-width: 2;
+                fill: none;
+            }
+
+        /* Page header */
+        .page-head {
+            margin-bottom: 32px;
+        }
+
+            .page-head .eyebrow {
+                margin-bottom: 14px;
+            }
+
+            .page-head h1 {
+                font-size: clamp(28px, 4vw, 44px);
+                font-weight: 600;
+                line-height: 1.1;
+                letter-spacing: -0.025em;
+                color: var(--text);
+                margin-bottom: 12px;
+            }
+
+            .page-head .sub {
+                color: var(--text-dim);
+                font-size: 15px;
+                line-height: 1.55;
+                max-width: 56ch;
+            }
+
+        /* Form layout - centered single column, max-width for readability */
+        .form-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            padding: 32px;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        /* Field row variants */
+        .field-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 599px) {
+            .form-card {
+                padding: 22px;
+            }
+
+            .field-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Help text under fields */
+        .field-help {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            font-size: 11px;
+            font-family: 'Geist Mono', monospace;
+            color: var(--text-faint);
+            gap: 8px;
+        }
+
+            .field-help .hint {
+                color: var(--text-faint);
+            }
+
+            .field-help .counter {
+                color: var(--text-faint);
+                white-space: nowrap;
+                tabular-nums: 1;
+                font-variant-numeric: tabular-nums;
+            }
+
+                .field-help .counter.warn {
+                    color: var(--accent-2);
+                }
+
+                .field-help .counter.over {
+                    color: var(--error);
+                    font-weight: 600;
+                }
+
+        /* Price input gets a Rs prefix */
+        .price-wrap {
+            position: relative;
+        }
+
+            .price-wrap input {
+                padding-left: 36px;
+            }
+
+            .price-wrap .pfx {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-family: 'Geist Mono', monospace;
+                font-size: 13px;
+                color: var(--text-faint);
+                pointer-events: none;
+            }
+
+        /* Form actions row */
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+            .form-actions .btn {
+                min-width: 140px;
+            }
+
+        /* Field-level error message */
+        .field-error {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--error);
+            line-height: 1.4;
+            display: none;
+        }
+
+            .field-error.show {
+                display: block;
+            }
+
+        .field input.has-error,
+        .field select.has-error,
+        .field textarea.has-error {
+            border-color: var(--error);
+        }
+
+        /* Loading state for edit-mode initial fetch */
+        .skel-form .skel-line {
+            height: 38px;
+            margin-bottom: 22px;
+            border-radius: 10px;
+        }
+
+            .skel-form .skel-line.tall {
+                height: 100px;
+            }
+
+        @media (max-width: 599px) {
+            .page-head {
+                margin-bottom: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+
+        <!-- Floating glass nav -->
+        <div id="topnav-mount"></div>
+
+        <!-- Page contents -->
+        <div id="pageBody">
+
+            <a href="/browse.html" class="back-link" id="backLink">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                <span id="backLabel">Back to gigs</span>
+            </a>
+
+            <!-- Header (text varies by mode) -->
+            <div class="page-head">
+                <div class="eyebrow" id="modeEyebrow">New gig</div>
+                <h1 id="pageTitle">Create a new gig</h1>
+                <p class="sub" id="pageSubtitle">Set a clear title, describe what you offer, and pick a fair price. Clients will see this on browse.</p>
+            </div>
+
+            <!-- Loading skeleton (only shown briefly in edit mode) -->
+            <div id="loadingState" class="form-wrap" hidden>
+                <div class="glass-card form-card skel-form">
+                    <div class="skeleton skel-line"></div>
+                    <div class="skeleton skel-line"></div>
+                    <div class="skeleton skel-line tall"></div>
+                    <div class="skeleton skel-line"></div>
+                </div>
+            </div>
+
+            <!-- The form itself -->
+            <div id="formState" class="form-wrap">
+                <div class="glass-card form-card">
+
+                    <div class="form-grid">
+
+                        <!-- Category -->
+                        <div class="field">
+                            <label for="fldCategory">Category</label>
+                            <select id="fldCategory" required>
+                                <option value="">Select a category</option>
+                                <option value="DESIGN">Design</option>
+                                <option value="WRITING">Writing</option>
+                                <option value="CODING">Coding</option>
+                                <option value="MARKETING">Marketing</option>
+                                <option value="TUTORING">Tutoring</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                            <div class="field-error" id="errCategory"></div>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="field">
+                            <label for="fldTitle">Title</label>
+                            <input id="fldTitle" type="text" maxlength="100" autocomplete="off" placeholder="e.g. Logo design for student startups">
+                            <div class="field-help">
+                                <span class="hint">Between 3 and 100 characters.</span>
+                                <span class="counter" id="cntTitle">0 / 100</span>
+                            </div>
+                            <div class="field-error" id="errTitle"></div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="field">
+                            <label for="fldDesc">Description</label>
+                            <textarea id="fldDesc" maxlength="2000" rows="6" placeholder="Describe what you'll deliver, how long it takes, and what's included."></textarea>
+                            <div class="field-help">
+                                <span class="hint">Between 10 and 2000 characters.</span>
+                                <span class="counter" id="cntDesc">0 / 2000</span>
+                            </div>
+                            <div class="field-error" id="errDesc"></div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="field">
+                            <label for="fldPrice">Price</label>
+                            <div class="price-wrap">
+                                <span class="pfx">Rs</span>
+                                <input id="fldPrice" type="number" min="1" max="999999" step="1" placeholder="500" inputmode="numeric">
+                            </div>
+                            <div class="field-help">
+                                <span class="hint">In PKR. Must be greater than 0 and less than 1,000,000.</span>
+                            </div>
+                            <div class="field-error" id="errPrice"></div>
+                        </div>
+
+                        <!-- General error banner (shown for non-field-specific server errors) -->
+                        <div class="error-banner" id="errBanner"></div>
+
+                        <!-- Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" id="btnSubmit">Publish gig</button>
+                            <button type="button" class="btn btn-secondary" id="btnCancel">Cancel</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 403 / 404 / forbidden state -->
+            <section id="forbiddenState" class="empty-state" hidden style="padding-top: 80px;">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                </div>
+                <h2 id="forbiddenTitle">Cannot edit this gig</h2>
+                <p id="forbiddenMsg">You do not have permission to edit this gig.</p>
+                <a href="/browse.html" class="btn btn-primary">Back to browse</a>
+            </section>
+
+        </div>
+
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/gig-edit.js"></script>
+
+</body>
+</html>

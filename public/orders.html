@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - SkillBridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/shared.css">
+    <style>
+        /* ----- ORDER-SPECIFIC STYLES ----- */
+
+        .hero-section {
+            margin-bottom: 40px;
+        }
+
+            .hero-section .sub {
+                max-width: 56ch;
+            }
+
+        /* Tab pills (reuse the pill pattern from browse, but as role tabs) */
+        .order-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+            .order-tabs button {
+                background: rgba(254, 253, 250, 0.5);
+                border: 1px solid var(--line);
+                color: var(--text-dim);
+                padding: 8px 18px;
+                border-radius: 999px;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all .2s;
+                font-family: inherit;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+                .order-tabs button:hover {
+                    border-color: var(--line-strong);
+                    color: var(--text);
+                    background: rgba(254, 253, 250, 0.9);
+                }
+
+                .order-tabs button.on {
+                    background: var(--text);
+                    color: var(--bg-0);
+                    border-color: var(--text);
+                }
+
+        /* Order grid: single column list, not a multi-col grid */
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* Order card: horizontal layout */
+        .order-card {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: inherit;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .order-card .order-main {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                min-width: 0;
+            }
+
+            .order-card .order-top {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .order-card h3 {
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                letter-spacing: -0.01em;
+            }
+
+            .order-card .order-meta {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+                font-size: 12px;
+                color: var(--text-dim);
+            }
+
+                .order-card .order-meta span {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+
+                .order-card .order-meta .meta-icon {
+                    width: 13px;
+                    height: 13px;
+                    stroke: currentColor;
+                    fill: none;
+                    stroke-width: 1.8;
+                    flex-shrink: 0;
+                }
+
+            .order-card .order-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 6px;
+                flex-shrink: 0;
+            }
+
+            .order-card .order-amount {
+                font-family: 'Geist Mono', monospace;
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--text);
+                letter-spacing: -0.01em;
+            }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Geist Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+
+            .status-badge.pending {
+                background: rgba(245, 214, 138, 0.25);
+                color: #8a6d00;
+                border: 1px solid rgba(245, 214, 138, 0.4);
+            }
+
+            .status-badge.in_progress {
+                background: var(--accent-soft);
+                color: var(--accent);
+                border: 1px solid rgba(15, 110, 84, 0.15);
+            }
+
+            .status-badge.completed {
+                background: rgba(15, 110, 84, 0.10);
+                color: var(--accent);
+                border: 1px solid rgba(15, 110, 84, 0.2);
+            }
+
+            .status-badge.cancelled {
+                background: var(--error-soft);
+                color: var(--error);
+                border: 1px solid rgba(196, 82, 58, 0.15);
+            }
+
+            .status-badge .status-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+
+        /* ----- ORDER DETAIL MODAL ----- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(31, 42, 38, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 80;
+            display: none;
+            place-items: center;
+        }
+
+            .modal-overlay.show {
+                display: grid;
+                animation: fadeUp .2s ease-out;
+            }
+
+        .modal {
+            background: var(--bg-1);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(31, 42, 38, 0.18);
+            width: 90%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+            .modal-head h2 {
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: var(--text-dim);
+            transition: background .15s, color .15s;
+            flex-shrink: 0;
+        }
+
+            .modal-close:hover {
+                background: rgba(31, 42, 38, 0.06);
+                color: var(--text);
+            }
+
+        .modal-body .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+        }
+
+            .modal-body .detail-row:last-child {
+                border-bottom: none;
+            }
+
+        .detail-label {
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 500;
+            text-align: right;
+        }
+
+            .detail-value a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+
+                .detail-value a:hover {
+                    text-decoration: underline;
+                }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+
+        .btn-danger {
+            background: var(--error-soft);
+            color: var(--error);
+            border: 1px solid rgba(196, 82, 58, 0.2);
+        }
+
+            .btn-danger:hover:not(:disabled) {
+                background: rgba(196, 82, 58, 0.14);
+                border-color: rgba(196, 82, 58, 0.3);
+            }
+
+        /* Skeleton for order list */
+        .skel-order {
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+            .skel-order .so-left {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .skel-order .so1 {
+                width: 55%;
+                height: 14px;
+            }
+
+            .skel-order .so2 {
+                width: 80%;
+                height: 11px;
+            }
+
+            .skel-order .so-right {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 6px;
+            }
+
+            .skel-order .so3 {
+                width: 70px;
+                height: 16px;
+            }
+
+            .skel-order .so4 {
+                width: 60px;
+                height: 18px;
+                border-radius: 999px;
+            }
+
+        /* Responsive */
+        @media (max-width: 639px) {
+            .order-card {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 16px;
+            }
+
+                .order-card .order-right {
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+            .modal {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+
+        /* ----- Star input ----- */
+        .star-input {
+            display: flex;
+            gap: 4px;
+        }
+
+            .star-input svg {
+                width: 28px;
+                height: 28px;
+                cursor: pointer;
+                fill: var(--bg-2);
+                color: var(--line-strong);
+                stroke: var(--line-strong);
+                stroke-width: 1;
+                transition: all .12s;
+            }
+
+                .star-input svg.active {
+                    fill: var(--warm-yellow);
+                    color: var(--warm-yellow);
+                    stroke: #c9a227;
+                }
+
+                .star-input svg:hover {
+                    transform: scale(1.15);
+                }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+
+        <div id="topnav-mount"></div>
+
+        <section class="hero-section">
+            <div class="eyebrow">Order Management</div>
+            <h1>Your <span class="accent">orders</span></h1>
+            <p class="sub text-dim">Track your placed and incoming orders. Accept work, mark completions, and manage deadlines.</p>
+        </section>
+
+        <!-- Role tabs -->
+        <div class="order-tabs" id="orderTabs"></div>
+
+        <!-- Section head with count -->
+        <div class="sec-head" id="secHead" style="display:none;">
+            <h2 id="sectionTitle">Orders <span class="count" id="orderCount"></span></h2>
+            <div class="sort-toggle" id="sortToggle">
+                <button class="on" data-sort="newest">Newest</button>
+                <button data-sort="deadline">Deadline</button>
+            </div>
+        </div>
+
+        <!-- Order list -->
+        <div class="order-list" id="orderList"></div>
+
+        <!-- Empty state -->
+        <div class="empty-state" id="emptyState" hidden>
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2" /><line x1="8" y1="9" x2="16" y2="9" /><line x1="8" y1="13" x2="13" y2="13" /></svg>
+            </div>
+            <h2 id="emptyTitle">No orders yet</h2>
+            <p id="emptyMsg">When you place or receive orders, they will appear here.</p>
+            <div id="emptyAction"></div>
+        </div>
+
+    </div>
+
+    <!-- Order detail modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <div class="modal-head">
+                <h2 id="modalTitle">Order Details</h2>
+                <button class="modal-close" id="modalClose" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <!-- Review modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal">
+            <div class="modal-head">
+                <h2>Leave a Review</h2>
+                <button class="modal-close" id="reviewClose" aria-label="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;">Rate your experience and help other clients make informed decisions.</p>
+                <div style="margin-bottom:18px;">
+                    <label style="display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Rating</label>
+                    <div class="star-input" id="starInput">
+                        <svg data-star="1" viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>
+                        <svg data-star="2" viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>
+                        <svg data-star="3" viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>
+                        <svg data-star="4" viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>
+                        <svg data-star="5" viewBox="0 0 24 24"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" /></svg>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="reviewComment">Comment</label>
+                    <textarea id="reviewComment" rows="4" placeholder="How was the experience?" maxlength="500"></textarea>
+                </div>
+                <div class="error-banner" id="reviewErrBanner" style="margin-top:10px;"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="reviewCancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="reviewSubmitBtn">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/orders.js"></script>
+</body>
+</html>

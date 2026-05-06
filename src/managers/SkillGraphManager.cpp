@@ -88,6 +88,14 @@ DataList<Endorsement> SkillGraphManager::getEndorsementsFor(int currentUserID,
     return endorsementRepo_.findByTo(targetUserID);
 }
 
+DataList<Endorsement> SkillGraphManager::getEndorsementsBy(
+    int currentUserID, int fromUserID) const {
+    if (currentUserID <= 0) {
+        throw UnauthorizedException("must be logged in to view endorsements");
+    }
+    return endorsementRepo_.findByFrom(fromUserID);
+}
+
 void SkillGraphManager::clearGraph() {
     graph_.clear();
 }

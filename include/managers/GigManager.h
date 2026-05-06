@@ -6,11 +6,12 @@
 #include "ITextRanker.h"
 #include "IFuzzyMatcher.h"
 #include "InvertedIndex.h"
-#include "../utils/AutocompleteTrie.h"
-#include "../utils/HashMap.h"
-#include "../utils/DataList.h"
-#include "../core/Gig.h"
-#include "../core/GigCategory.h"
+#include "AutocompleteTrie.h"
+#include "HashMap.h"
+#include "DataList.h"
+#include "Gig.h"
+#include "GigCategory.h"
+#include "GigBrowseFilter.h"
 #include <string>
 
 
@@ -44,6 +45,7 @@ public:
         GigCategory category);
 
     void deactivateGig(int currentUserID, int gigID);
+    void setGigActive(int currentUserID, int gigID, bool active);
     void deleteGig(int currentUserID, int gigID);
 
    
@@ -51,7 +53,7 @@ public:
     DataList<Gig> findGigsByOwner(int ownerID) const;
     DataList<Gig> findAllActiveGigs() const;
     DataList<Gig> findAllGigs(int currentUserID) const;
-
+    DataList<Gig> findActiveGigsForBrowse(const GigBrowseFilter& filter, GigSortOrder sort) const;
    
     DataList<Gig> searchGigs(const std::string& rawQuery,
         int maxResults) const;

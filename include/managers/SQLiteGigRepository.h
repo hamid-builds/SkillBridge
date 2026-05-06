@@ -17,6 +17,7 @@ public:
     void saveGig(Gig& gig) override;
     void updateGig(const Gig& gig) override;
     void deactivateGig(int gigID) override;
+    void setGigActive(int gigID, bool active) override;
     bool deleteGig(int gigID) override;
 
     // Read operations
@@ -24,6 +25,7 @@ public:
     DataList<Gig> findGigsByOwner(int ownerID) const override;
     DataList<Gig> findAllActiveGigs() const override;
     DataList<Gig> findAllGigs() const override;
+    DataList<Gig> findActiveGigsFiltered(const GigBrowseFilter& filter, GigSortOrder sort) const override;
 
 private:
    

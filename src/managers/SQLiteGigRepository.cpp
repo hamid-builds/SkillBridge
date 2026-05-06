@@ -323,3 +323,90 @@ DataList<Gig> SQLiteGigRepository::findAllGigs() const {
 
     return result;
 }
+
+DataList<Gig> SQLiteGigRepository::findActiveGigsFiltered(
+    const GigBrowseFilter& filter,
+    GigSortOrder sort
+) const {
+    sqlite3* db = DatabaseManager::getInstance().getConnection();
+
+    string sql =
+        "SELECT gigID, ownerID, title, description, price, category, "
+        "       isActive, createdAt "
+        "FROM gigs WHERE isActive=1";
+
+    if (filter.hasCategory) {
+        sql += " AND category=?";
+    }
+
+    switch (sort) {
+    case GigSortOrder::NEWEST_FIRST:
+        sql += " ORDER BY createdAt DESC, gigID DESC";
+        break;
+    case GigSortOrder::PRICE_ASC:
+        sql += " ORDER BY price ASC, gigID ASC";
+        break;
+    case GigSortOrder::PRICE_DESC:
+        sql += " ORDER BY price DESC, gigID ASC";
+        break;
+    default:
+        sql += " ORDER BY createdAt DESC, gigID DESC";
+        break;
+    }
+    sql += ";";
+
+    sqlite3_stmt* stmt = nullptr;
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        throwPrepareError(sql);
+    }
+
+    if (filter.hasCategory) {
+        const string categoryStr = gigCategoryToString(filter.category);
+        sqlite3_bind_text(stmt, 1, categoryStr.c_str(), -1, SQLITE_TRANSIENT);
+    }
+
+    DataList<Gig> result;
+    int rc;
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+        result.add(buildGigFromRow(stmt));
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (rc != SQLITE_DONE) {
+        throw DatabaseException(
+            "Failed to query filtered active gigs: " +
+            string(sqlite3_errmsg(db)));
+    }
+
+    return result;
+}
+-
+
+void SQLiteGigRepository::setGigActive(int gigID, bool active) {
+    sqlite3* db = DatabaseManager::getInstance().getConnection();
+
+    const string sql = "UPDATE gigs SET isActive=? WHERE gigID=?;";
+
+    sqlite3_stmt* stmt = nullptr;
+    if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        throwPrepareError(sql);
+    }
+
+    sqlite3_bind_int(stmt, 1, active ? 1 : 0);
+    sqlite3_bind_int(stmt, 2, gigID);
+
+    int rc = sqlite3_step(stmt);
+    if (rc != SQLITE_DONE) {
+        string err = sqlite3_errmsg(db);
+        sqlite3_finalize(stmt);
+        throw DatabaseException("Failed to set gig active flag: " + err);
+    }
+
+    int changed = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+
+    if (changed == 0) {
+        throw GigNotFoundException("No gig with gigID=" + to_string(gigID));
+    }
+}

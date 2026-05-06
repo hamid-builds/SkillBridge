@@ -15,6 +15,7 @@ public:
     DataList<Message> findInbox(int receiverID) const override;
     DataList<Message> findAllMessages() const override;
     int countUnread(int receiverID) const override;
+    DataList<int> findConversationPartners(int userID) const override;
 
 private:
     Message buildMessageFromRow(sqlite3_stmt* stmt) const;

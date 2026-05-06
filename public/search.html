@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Search results on SkillBridge - FAST NUCES Lahore campus marketplace">
+    <title>Search results - SkillBridge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/shared.css">
+
+    <style>
+        /* =========================================================
+           Search-specific styles (small page-only adjustments)
+           Card styles, skeletons, and empty state come from shared.css.
+           ========================================================= */
+        /* Tighten the gap between the search bar and the section header,
+           since this page has no hero, no pills, and no sort toggle. */
+        .search-bar {
+            margin-bottom: 28px;
+        }
+
+        /* The section header gets a dim "Results for ..." treatment. */
+        .sec-head h2 .qry {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page wrap is the centered 1380px max-width container -->
+    <div class="wrap">
+
+        <!-- Floating glass nav lives INSIDE the wrap, rendered by shared.js -->
+        <div id="topnav-mount"></div>
+
+        <!-- Search bar (page-level, big, prominent). Pre-filled by search.js. -->
+        <div class="search-bar">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><line x1="16" y1="16" x2="22" y2="22" /></svg>
+            <input id="search-input" type="text" placeholder="Search gigs by skill, keyword, or seller name..." autocomplete="off" spellcheck="false">
+            <button class="search-go" id="search-go">Search</button>
+            <div id="search-autocomplete" class="autocomplete" role="listbox"></div>
+        </div>
+
+        <!-- Section header: "Results for 'query' (count)" -->
+        <div class="sec-head">
+            <h2><span id="resultTitle">Results</span> <span class="count" id="resultCount"></span></h2>
+        </div>
+
+        <!-- Gig grid -->
+        <section id="gigGrid" class="gig-grid" aria-busy="true"></section>
+
+        <!-- Empty state -->
+        <section id="emptyState" class="empty-state" hidden>
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16" y1="16" x2="22" y2="22" />
+                </svg>
+            </div>
+            <h2 id="emptyTitle">No gigs match your search</h2>
+            <p id="emptyMsg">Try different keywords or browse all gigs.</p>
+            <div id="emptyAction"></div>
+        </section>
+
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/search.js"></script>
+
+</body>
+</html>

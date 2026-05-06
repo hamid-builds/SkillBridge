@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Endorsements and Trust Network on SkillBridge">
+    <title>Endorsements - SkillBridge</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/shared.css">
+
+    <style>
+        [hidden] {
+            display: none !important;
+        }
+
+        /* ----- Hero ----- */
+        .hero {
+            margin-bottom: 40px;
+        }
+
+            .hero .eyebrow {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+                .hero .eyebrow::before {
+                    content: '';
+                    width: 32px;
+                    height: 1px;
+                    background: var(--accent);
+                }
+
+                .hero .eyebrow span {
+                    font-family: 'Geist Mono', monospace;
+                    font-size: 11px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.16em;
+                    color: var(--text-dim);
+                }
+
+            .hero h1 {
+                font-size: clamp(32px, 5vw, 56px);
+                font-weight: 700;
+                letter-spacing: -0.035em;
+                line-height: 1.05;
+                color: var(--text);
+                margin-bottom: 10px;
+            }
+
+                .hero h1 em {
+                    font-family: 'Instrument Serif', serif;
+                    font-style: italic;
+                    font-weight: 400;
+                    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+            .hero .sub {
+                color: var(--text-dim);
+                font-size: 15px;
+                max-width: 520px;
+            }
+
+        /* ----- Tabs ----- */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            background: rgba(254,253,250,0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 4px;
+            width: fit-content;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 9px 18px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .15s;
+            font-family: inherit;
+        }
+
+            .tab-btn:hover {
+                color: var(--text);
+            }
+
+            .tab-btn.active {
+                background: #fff;
+                color: var(--text);
+                box-shadow: 0 1px 4px rgba(31,42,38,0.08);
+            }
+
+        /* ----- Rankings ----- */
+        .rank-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+        }
+
+            .rank-table th {
+                text-align: left;
+                padding: 0 16px 8px;
+                font-family: 'Geist Mono', monospace;
+                font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.12em;
+                color: var(--text-faint);
+                font-weight: 500;
+            }
+
+                .rank-table th:last-child {
+                    text-align: right;
+                }
+
+        .rank-row {
+            cursor: pointer;
+            transition: transform .15s;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .rank-row:hover {
+                transform: translateY(-2px);
+            }
+
+            .rank-row td {
+                padding: 14px 16px;
+                background: rgba(254,253,250,0.6);
+                backdrop-filter: blur(20px) saturate(180%);
+                border-top: 1px solid var(--line);
+                border-bottom: 1px solid var(--line);
+            }
+
+                .rank-row td:first-child {
+                    border-left: 1px solid var(--line);
+                    border-radius: 14px 0 0 14px;
+                }
+
+                .rank-row td:last-child {
+                    border-right: 1px solid var(--line);
+                    border-radius: 0 14px 14px 0;
+                    text-align: right;
+                }
+
+        .rank-num {
+            font-family: 'Geist Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            width: 40px;
+        }
+
+            .rank-num.gold {
+                color: #c9a227;
+            }
+
+            .rank-num.silver {
+                color: #8a8a8a;
+            }
+
+            .rank-num.bronze {
+                color: #a0622e;
+            }
+
+        .rank-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .rank-user .mini-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                display: grid;
+                place-items: center;
+                color: #fff;
+                font-size: 11px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .rank-user .name {
+                font-weight: 500;
+                color: var(--text);
+                font-size: 14px;
+            }
+
+        .rank-score {
+            font-family: 'Geist Mono', monospace;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .score-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-bar {
+            height: 6px;
+            background: var(--accent-soft);
+            border-radius: 3px;
+            min-width: 40px;
+            max-width: 120px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width .5s ease-out;
+        }
+
+        /* ----- Trust network ----- */
+        .hop-group {
+            margin-bottom: 28px;
+        }
+
+        .hop-label {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-faint);
+            margin-bottom: 10px;
+            padding-left: 4px;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .trust-card {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform .15s;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .trust-card:hover {
+                transform: translateY(-3px);
+            }
+
+            .trust-card .mini-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                display: grid;
+                place-items: center;
+                color: #fff;
+                font-size: 12px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .trust-card .name {
+                font-weight: 500;
+                color: var(--text);
+                font-size: 13px;
+            }
+
+            .trust-card .hop-tag {
+                font-family: 'Geist Mono', monospace;
+                font-size: 10px;
+                color: var(--text-faint);
+            }
+
+        /* ----- Endorsements given ----- */
+        .given-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .given-card {
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            animation: fadeUp .35s ease-out backwards;
+        }
+
+            .given-card .mini-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                display: grid;
+                place-items: center;
+                color: #fff;
+                font-size: 11px;
+                font-weight: 600;
+                flex-shrink: 0;
+            }
+
+            .given-card .info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .given-card .top-line {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text);
+            }
+
+                .given-card .top-line a {
+                    color: var(--accent);
+                    text-decoration: none;
+                }
+
+                    .given-card .top-line a:hover {
+                        text-decoration: underline;
+                    }
+
+            .given-card .bottom-line {
+                font-size: 12px;
+                color: var(--text-dim);
+                margin-top: 2px;
+            }
+
+            .given-card .skill-chip {
+                padding: 3px 10px;
+                background: var(--accent-soft);
+                color: var(--accent);
+                border-radius: 999px;
+                font-size: 11px;
+                font-family: 'Geist Mono', monospace;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .given-card .btn-remove {
+                padding: 6px 14px;
+                font-size: 11px;
+                border-radius: 8px;
+                border: 1px solid var(--line-strong);
+                background: none;
+                color: var(--text-dim);
+                cursor: pointer;
+                font-family: inherit;
+                transition: all .15s;
+                white-space: nowrap;
+            }
+
+                .given-card .btn-remove:hover {
+                    border-color: var(--error);
+                    color: var(--error);
+                    background: var(--error-soft);
+                }
+
+        /* ----- Section header ----- */
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+            .section-head h2 {
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+            }
+
+                .section-head h2 .count {
+                    color: var(--text-faint);
+                    font-weight: 400;
+                    margin-left: 6px;
+                }
+
+        @media (max-width: 599px) {
+            .tab-bar {
+                width: 100%;
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .given-card {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+                .given-card .btn-remove {
+                    margin-left: auto;
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrap">
+        <div id="topnav-mount"></div>
+
+        <div class="hero">
+            <div class="eyebrow"><span>Trust Network</span></div>
+            <h1>Skill <em>Endorsements</em></h1>
+            <p class="sub">See who the community trusts most, powered by PageRank and graph traversal.</p>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="tab-bar" id="tabBar">
+            <button class="tab-btn active" data-tab="rankings">Top Freelancers</button>
+            <button class="tab-btn" data-tab="trusted">Near You</button>
+            <button class="tab-btn" data-tab="given">Given by You</button>
+        </div>
+
+        <!-- Rankings panel -->
+        <section id="panelRankings">
+            <div class="section-head">
+                <h2>PageRank Leaderboard <span class="count" id="rankCount"></span></h2>
+            </div>
+            <div id="rankLoading">
+                <div class="glass-card" style="padding:20px;">
+                    <div class="skeleton" style="height:18px;width:60%;margin-bottom:14px;"></div>
+                    <div class="skeleton" style="height:18px;width:80%;margin-bottom:14px;"></div>
+                    <div class="skeleton" style="height:18px;width:45%;"></div>
+                </div>
+            </div>
+            <table class="rank-table" id="rankTable" hidden>
+                <thead>
+                    <tr>
+                        <th style="width:50px;">Rank</th>
+                        <th>Freelancer</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="rankBody"></tbody>
+            </table>
+            <section id="rankEmpty" class="empty-state" hidden>
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                </div>
+                <h2>No rankings yet</h2>
+                <p>Endorsements power the rankings. Start endorsing freelancers you trust.</p>
+            </section>
+        </section>
+
+        <!-- Trust panel -->
+        <section id="panelTrusted" hidden>
+            <div class="section-head">
+                <h2>People Near You <span class="count" id="trustCount"></span></h2>
+            </div>
+            <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px;">
+                Freelancers endorsed by people in your trust network (up to 2 hops via BFS).
+            </p>
+            <div id="trustLoading">
+                <div class="glass-card" style="padding:20px;">
+                    <div class="skeleton" style="height:16px;width:50%;margin-bottom:12px;"></div>
+                    <div class="skeleton" style="height:16px;width:70%;"></div>
+                </div>
+            </div>
+            <div id="trustContent" hidden></div>
+            <section id="trustEmpty" class="empty-state" hidden>
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </div>
+                <h2>No trusted users nearby</h2>
+                <p>Endorse freelancers to build your trust network. BFS will then find users connected to you.</p>
+            </section>
+        </section>
+
+        <!-- Given panel -->
+        <section id="panelGiven" hidden>
+            <div class="section-head">
+                <h2>Endorsements You Gave <span class="count" id="givenCount"></span></h2>
+            </div>
+            <div id="givenLoading">
+                <div class="glass-card" style="padding:20px;">
+                    <div class="skeleton" style="height:16px;width:55%;margin-bottom:12px;"></div>
+                    <div class="skeleton" style="height:16px;width:65%;"></div>
+                </div>
+            </div>
+            <div id="givenList" class="given-list" hidden></div>
+            <section id="givenEmpty" class="empty-state" hidden>
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" />
+                        <path d="M1 15h4V9H1z" fill="none" />
+                    </svg>
+                </div>
+                <h2>No endorsements given yet</h2>
+                <p>Visit a freelancer's profile to endorse their skills.</p>
+            </section>
+        </section>
+
+    </div>
+
+    <script src="/js/shared.js"></script>
+    <script src="/js/endorsements.js"></script>
+
+</body>
+</html>A
