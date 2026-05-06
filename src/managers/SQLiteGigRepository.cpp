@@ -7,9 +7,6 @@
 
 using namespace std;
 
-
-
-
 void SQLiteGigRepository::throwPrepareError(const string& sql) const {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
     string msg = "Failed to prepare statement. SQL: " + sql +
@@ -18,7 +15,6 @@ void SQLiteGigRepository::throwPrepareError(const string& sql) const {
 }
 
 Gig SQLiteGigRepository::buildGigFromRow(sqlite3_stmt* stmt) const {
-    
     int gigID = sqlite3_column_int(stmt, 0);
     int ownerID = sqlite3_column_int(stmt, 1);
     const char* title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
@@ -28,7 +24,6 @@ Gig SQLiteGigRepository::buildGigFromRow(sqlite3_stmt* stmt) const {
     int active = sqlite3_column_int(stmt, 6);
     const char* ts = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 7));
 
-    
     Gig g;
     g.setGigID(gigID);
     g.setOwnerID(ownerID);
@@ -40,8 +35,6 @@ Gig SQLiteGigRepository::buildGigFromRow(sqlite3_stmt* stmt) const {
     g.setCreatedAt(ts ? ts : "");
     return g;
 }
-
-
 
 void SQLiteGigRepository::saveGig(Gig& gig) {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
@@ -66,19 +59,15 @@ void SQLiteGigRepository::saveGig(Gig& gig) {
 
     int rc = sqlite3_step(stmt);
     if (rc != SQLITE_DONE) {
-       
         string err = sqlite3_errmsg(db);
         int extended = sqlite3_extended_errcode(db);
         sqlite3_finalize(stmt);
 
-       
-      
         if (rc == SQLITE_CONSTRAINT) {
             if (extended == SQLITE_CONSTRAINT_UNIQUE) {
                 throw DuplicateEntryException(
                     "Gig unique constraint: " + err);
             }
-            
             throw ValidationException("Gig constraint failed: " + err);
         }
         throw DatabaseException("Failed to insert gig: " + err);
@@ -89,16 +78,13 @@ void SQLiteGigRepository::saveGig(Gig& gig) {
 
     gig.setGigID(newID);
 
-  
     try {
         Gig reloaded = findGigByID(newID);
         gig.setCreatedAt(reloaded.getCreatedAt());
     }
     catch (const exception&) {
-       
     }
 }
-
 
 
 void SQLiteGigRepository::updateGig(const Gig& gig) {
@@ -140,7 +126,6 @@ void SQLiteGigRepository::updateGig(const Gig& gig) {
 }
 
 
-
 void SQLiteGigRepository::deactivateGig(int gigID) {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
 
@@ -168,8 +153,6 @@ void SQLiteGigRepository::deactivateGig(int gigID) {
     }
 }
 
-
-
 bool SQLiteGigRepository::deleteGig(int gigID) {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
 
@@ -194,7 +177,6 @@ bool SQLiteGigRepository::deleteGig(int gigID) {
 
     return changed > 0;
 }
-
 
 
 Gig SQLiteGigRepository::findGigByID(int gigID) const {
@@ -230,7 +212,6 @@ Gig SQLiteGigRepository::findGigByID(int gigID) const {
 }
 
 
-
 DataList<Gig> SQLiteGigRepository::findGigsByOwner(int ownerID) const {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
 
@@ -262,8 +243,6 @@ DataList<Gig> SQLiteGigRepository::findGigsByOwner(int ownerID) const {
     return result;
 }
 
-
-
 DataList<Gig> SQLiteGigRepository::findAllActiveGigs() const {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
 
@@ -294,7 +273,6 @@ DataList<Gig> SQLiteGigRepository::findAllActiveGigs() const {
 }
 
 
-
 DataList<Gig> SQLiteGigRepository::findAllGigs() const {
     sqlite3* db = DatabaseManager::getInstance().getConnection();
 
@@ -323,6 +301,7 @@ DataList<Gig> SQLiteGigRepository::findAllGigs() const {
 
     return result;
 }
+
 
 DataList<Gig> SQLiteGigRepository::findActiveGigsFiltered(
     const GigBrowseFilter& filter,
@@ -381,7 +360,6 @@ DataList<Gig> SQLiteGigRepository::findActiveGigsFiltered(
 
     return result;
 }
--
 
 void SQLiteGigRepository::setGigActive(int gigID, bool active) {
     sqlite3* db = DatabaseManager::getInstance().getConnection();

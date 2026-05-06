@@ -1,33 +1,1059 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>SkillBridge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="SkillBridge - campus freelancing platform for FAST NUCES Lahore students">
+    <title>SkillBridge - Sign in</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: sans-serif;
-            max-width: 600px;
-            margin: 60px auto;
-            padding: 0 20px;
-            color: #1f2a26;
-            background: #f7f5ef
+        /* ============================================================
+        DESIGN TOKENS - Locked Mockup B v2 Light Emerald
+        ============================================================ */
+        :root {
+            --bg-0: #f7f5ef;
+            --bg-1: #fefdfa;
+            --bg-2: #f1ede2;
+            --line: rgba(31, 42, 38, 0.10);
+            --line-strong: rgba(31, 42, 38, 0.18);
+            --text: #1f2a26;
+            --text-dim: #5c6660;
+            --text-faint: #948e80;
+            --accent: #0f6e54;
+            --accent-hover: #0c5b46;
+            --accent-soft: #d8ebe2;
+            --accent-2: #ff9b7a;
+            --accent-glow: rgba(15, 110, 84, 0.25);
+            --warm-yellow: #f5d68a;
+            --error: #c4523a;
+            --error-soft: rgba(196, 82, 58, 0.08);
+            --success: #0f6e54;
         }
 
-        h1 {
-            color: #0f6e54
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        code {
-            background: #f1ede2;
-            padding: 2px 6px;
-            border-radius: 4px
+        html, body {
+            background: var(--bg-0);
+            color: var(--text);
+            font-family: 'Geist', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            min-height: 100vh;
+            min-height: 100svh;
+        }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(ellipse 80% 50% at 15% 0%, rgba(255, 155, 122, 0.20), transparent 60%), radial-gradient(ellipse 60% 50% at 90% 10%, rgba(245, 214, 138, 0.22), transparent 60%), radial-gradient(ellipse 70% 60% at 50% 100%, rgba(15, 110, 84, 0.10), transparent 60%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            body::after {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.85' /></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>");
+                opacity: 0.04;
+                pointer-events: none;
+                z-index: 0;
+                mix-blend-mode: multiply;
+            }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            min-height: 100svh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* BRAND PANEL */
+        .brand {
+            padding: 48px 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 100vh;
+            min-height: 100svh;
+            position: relative;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 17px;
+            letter-spacing: -0.02em;
+        }
+
+            .brand-logo .dot {
+                width: 9px;
+                height: 9px;
+                background: var(--accent);
+                border-radius: 50%;
+                box-shadow: 0 0 12px var(--accent-glow);
+            }
+
+        .brand-hero {
+            max-width: 520px;
+        }
+
+            .brand-hero .eyebrow {
+                font-family: 'Geist Mono', monospace;
+                font-size: 11px;
+                color: var(--accent);
+                text-transform: uppercase;
+                letter-spacing: 0.18em;
+                margin-bottom: 22px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-weight: 500;
+            }
+
+                .brand-hero .eyebrow::before {
+                    content: "";
+                    width: 24px;
+                    height: 1.5px;
+                    background: var(--accent);
+                    box-shadow: 0 0 6px var(--accent-glow);
+                    border-radius: 2px;
+                }
+
+            .brand-hero h1 {
+                font-size: clamp(36px, 4.6vw, 64px);
+                font-weight: 600;
+                line-height: 1.04;
+                letter-spacing: -0.035em;
+                margin-bottom: 22px;
+                color: var(--text);
+            }
+
+                .brand-hero h1 .accent {
+                    font-family: 'Instrument Serif', serif;
+                    font-style: italic;
+                    font-weight: 400;
+                    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                }
+
+            .brand-hero .sub {
+                color: var(--text-dim);
+                font-size: 15px;
+                line-height: 1.6;
+                max-width: 48ch;
+                margin-bottom: 36px;
+            }
+
+        .brand-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .brand-bullet {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            color: var(--text-dim);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+            .brand-bullet .check {
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: var(--accent-soft);
+                border: 1px solid rgba(15, 110, 84, 0.18);
+                display: grid;
+                place-items: center;
+                margin-top: 1px;
+            }
+
+                .brand-bullet .check svg {
+                    width: 11px;
+                    height: 11px;
+                    stroke: var(--accent);
+                    stroke-width: 2.5;
+                    fill: none;
+                }
+
+            .brand-bullet b {
+                color: var(--text);
+                font-weight: 500;
+            }
+
+        .brand-footer {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            color: var(--text-faint);
+            letter-spacing: 0.04em;
+        }
+
+        /* AUTH PANEL */
+        .auth {
+            display: grid;
+            place-items: center;
+            padding: 48px 40px;
+            min-height: 100vh;
+            min-height: 100svh;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(254, 253, 250, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 36px 32px 32px;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 8px 32px rgba(31, 42, 38, 0.06);
+            animation: fadeUp .5s ease-out backwards;
+        }
+
+        /* TABS */
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            background: rgba(254, 253, 250, 0.6);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 28px;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 7px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background .2s, color .2s, box-shadow .2s;
+        }
+
+            .tab.on {
+                background: #fff;
+                color: var(--text);
+                box-shadow: 0 1px 3px rgba(31, 42, 38, 0.08);
+                font-weight: 600;
+            }
+
+        /* FORM HEADING */
+        .form-head {
+            margin-bottom: 20px;
+        }
+
+            .form-head h2 {
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                margin-bottom: 6px;
+            }
+
+            .form-head p {
+                color: var(--text-dim);
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+        /* FORM FIELDS */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .field label {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-dim);
+                letter-spacing: 0.01em;
+            }
+
+        /* INPUT WRAPPER (allows positioning the show-password button) */
+        .input-wrap {
+            position: relative;
+        }
+
+            .input-wrap input {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.7);
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                padding: 12px 14px;
+                font-size: 14px;
+                font-family: inherit;
+                color: var(--text);
+                outline: none;
+                transition: border-color .2s, background .2s, box-shadow .2s;
+            }
+
+            .input-wrap.has-toggle input {
+                padding-right: 44px;
+            }
+
+            .input-wrap input::placeholder {
+                color: var(--text-faint);
+            }
+
+            .input-wrap input:hover {
+                border-color: var(--line-strong);
+            }
+
+            .input-wrap input:focus {
+                border-color: var(--accent);
+                background: #fff;
+                box-shadow: 0 0 0 3px var(--accent-glow);
+            }
+
+            .input-wrap input:disabled {
+                background: var(--bg-2);
+                color: var(--text-faint);
+                cursor: not-allowed;
+            }
+
+        /* SHOW-PASSWORD EYE TOGGLE */
+        .pw-toggle {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: grid;
+            place-items: center;
+            color: var(--text-faint);
+            transition: color .2s, background .2s;
+        }
+
+            .pw-toggle:hover {
+                color: var(--text-dim);
+                background: rgba(31, 42, 38, 0.04);
+            }
+
+            .pw-toggle svg {
+                width: 18px;
+                height: 18px;
+                stroke: currentColor;
+                stroke-width: 1.8;
+                fill: none;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .pw-toggle .eye-off {
+                display: none;
+            }
+
+            .pw-toggle.shown .eye-on {
+                display: none;
+            }
+
+            .pw-toggle.shown .eye-off {
+                display: block;
+            }
+
+        /* ROLE PICKER */
+        .role-picker {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .role-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+            .role-option input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: all .2s;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+            .role-card .role-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text);
+            }
+
+            .role-card .role-desc {
+                font-size: 11px;
+                color: var(--text-faint);
+                line-height: 1.3;
+            }
+
+        .role-option:hover .role-card {
+            border-color: var(--line-strong);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .role-option input:checked + .role-card {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+            .role-option input:checked + .role-card .role-name {
+                color: var(--accent);
+            }
+
+        /* PRIMARY BUTTON */
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 13px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform .15s, box-shadow .2s, background .2s;
+            margin-top: 6px;
+            min-height: 48px;
+        }
+
+            .btn-primary:hover:not(:disabled) {
+                transform: translateY(-1px);
+                background: var(--accent-hover);
+                box-shadow: 0 6px 20px var(--accent-glow);
+            }
+
+            .btn-primary:active:not(:disabled) {
+                transform: translateY(0);
+            }
+
+            .btn-primary:disabled {
+                background: var(--text-faint);
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+
+        /* ERROR BANNER (lives inside each form block, above form fields) */
+        .error-banner {
+            background: var(--error-soft);
+            border: 1px solid rgba(196, 82, 58, 0.25);
+            color: var(--error);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+            display: none;
+            margin-bottom: 16px;
+        }
+
+            .error-banner.show {
+                display: block;
+                animation: fadeUp .25s ease-out;
+            }
+
+        /* AUTH FOOTER */
+        .auth-foot {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-faint);
+            line-height: 1.5;
+        }
+
+            .auth-foot a {
+                color: var(--accent);
+                text-decoration: none;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+                .auth-foot a:hover {
+                    color: var(--accent-hover);
+                    text-decoration: underline;
+                }
+
+        /* FORM BLOCK VISIBILITY */
+        .form-block {
+            display: none;
+        }
+
+            .form-block.on {
+                display: block;
+                animation: fadeUp .25s ease-out;
+            }
+
+        /* ANIMATION */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE: TABLET */
+        @media (max-width: 959px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .brand {
+                min-height: auto;
+                padding: 36px 40px 24px;
+            }
+
+            .brand-hero {
+                max-width: 100%;
+            }
+
+                .brand-hero h1 {
+                    font-size: clamp(30px, 5vw, 44px);
+                    margin-bottom: 16px;
+                }
+
+                .brand-hero .sub {
+                    font-size: 14px;
+                    margin-bottom: 24px;
+                    max-width: 60ch;
+                }
+
+            .brand-bullets {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .brand-bullet {
+                background: rgba(254, 253, 250, 0.5);
+                border: 1px solid var(--line);
+                padding: 8px 12px;
+                border-radius: 999px;
+                font-size: 12px;
+            }
+
+                .brand-bullet b {
+                    font-weight: 500;
+                }
+
+            .brand-footer {
+                display: none;
+            }
+
+            .auth {
+                min-height: auto;
+                padding: 24px 40px 48px;
+            }
+        }
+
+        /* RESPONSIVE: MOBILE */
+        @media (max-width: 639px) {
+            .brand {
+                padding: 24px 20px 12px;
+                gap: 16px;
+            }
+
+            .brand-hero .eyebrow {
+                display: none;
+            }
+
+            .brand-hero h1 {
+                font-size: 22px;
+                margin-bottom: 8px;
+                letter-spacing: -0.02em;
+            }
+
+            .brand-hero .sub {
+                font-size: 13px;
+                margin-bottom: 0;
+                max-width: 100%;
+            }
+
+            .brand-bullets {
+                display: none;
+            }
+
+            .auth {
+                padding: 16px 20px 32px;
+            }
+
+            .auth-card {
+                padding: 28px 22px 24px;
+                border-radius: 16px;
+            }
+
+            .input-wrap input {
+                font-size: 16px;
+                padding: 14px 14px;
+                min-height: 48px;
+            }
+
+            .input-wrap.has-toggle input {
+                padding-right: 48px;
+            }
+
+            .btn-primary {
+                font-size: 15px;
+                padding: 14px 18px;
+            }
+
+            .tab {
+                padding: 12px 14px;
+                min-height: 44px;
+            }
+
+            .form-head h2 {
+                font-size: 20px;
+            }
+        }
+
+        /* RESPONSIVE: VERY SMALL PHONES */
+        @media (max-width: 379px) {
+            .brand {
+                padding: 20px 16px 10px;
+            }
+
+            .brand-logo {
+                font-size: 16px;
+            }
+
+            .brand-hero h1 {
+                font-size: 20px;
+            }
+
+            .brand-hero .sub {
+                font-size: 12px;
+            }
+
+            .auth {
+                padding: 12px 16px 24px;
+            }
+
+            .auth-card {
+                padding: 22px 18px 20px;
+            }
+
+            .role-picker {
+                grid-template-columns: 1fr;
+            }
+
+            .form-head h2 {
+                font-size: 19px;
+            }
+        }
+
+        /* REDUCED MOTION */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>SkillBridge</h1>
-    <p>The HTTP server is running. This is a placeholder page.</p>
-    <p>API health check: <a href="/api/health">/api/health</a></p>
-    <p>Real UI coming in Step 6.</p>
+
+    <div class="page">
+
+        <aside class="brand">
+            <div class="brand-logo">
+                <span class="dot"></span>
+                SkillBridge
+            </div>
+
+            <div class="brand-hero">
+                <div class="eyebrow">A campus marketplace</div>
+                <h1>Find <span class="accent">talent</span> on your campus.</h1>
+                <p class="sub">SkillBridge connects students who can with students who need help. Designers, writers, coders, tutors, all in one place at FAST NUCES Lahore.</p>
+
+                <div class="brand-bullets">
+                    <div class="brand-bullet">
+                        <span class="check">
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                        </span>
+                        <div><b>Real students.</b> Verified accounts and reviews after every order.</div>
+                    </div>
+                    <div class="brand-bullet">
+                        <span class="check">
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                        </span>
+                        <div><b>Smart search.</b> Find the right gig in seconds with autocomplete and ranking.</div>
+                    </div>
+                    <div class="brand-bullet">
+                        <span class="check">
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                        </span>
+                        <div><b>Trusted recommendations.</b> See who is endorsed by people you know.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">SkillBridge v1.0 &middot; CS1004 Spring 2026 &middot; FAST NUCES Lahore</div>
+        </aside>
+
+        <main class="auth">
+            <section class="auth-card" aria-labelledby="auth-title">
+
+                <div class="tabs" role="tablist">
+                    <button type="button" class="tab on" data-tab="login" role="tab" aria-selected="true">Sign in</button>
+                    <button type="button" class="tab" data-tab="register" role="tab" aria-selected="false">Create account</button>
+                </div>
+
+                <!-- LOGIN BLOCK -->
+                <div class="form-block on" data-block="login">
+                    <div class="form-head">
+                        <h2 id="auth-title">Welcome back</h2>
+                        <p>Sign in to your SkillBridge account to continue.</p>
+                    </div>
+
+                    <div class="error-banner" id="loginError" role="alert"></div>
+
+                    <form id="loginForm" novalidate>
+                        <div class="field">
+                            <label for="loginEmail">Email</label>
+                            <div class="input-wrap">
+                                <input type="email" id="loginEmail" name="email" placeholder="you@nu.edu.pk" autocomplete="email" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="loginPassword">Password</label>
+                            <div class="input-wrap has-toggle">
+                                <input type="password" id="loginPassword" name="password" placeholder="Your password" autocomplete="current-password" required>
+                                <button type="button" class="pw-toggle" data-target="loginPassword" aria-label="Show password">
+                                    <svg class="eye-on" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    <svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6.5 0-10-7-10-7a19.5 19.5 0 0 1 4.06-4.94" /><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c6.5 0 10 7 10 7a19.46 19.46 0 0 1-2.16 3.19" /><line x1="2" y1="2" x2="22" y2="22" /><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" id="loginBtn">Sign in</button>
+                    </form>
+
+                    <div class="auth-foot">
+                        New to SkillBridge? <a data-switch="register">Create an account</a>
+                    </div>
+                </div>
+
+                <!-- REGISTER BLOCK -->
+                <div class="form-block" data-block="register">
+                    <div class="form-head">
+                        <h2>Create your account</h2>
+                        <p>Join the SkillBridge campus marketplace.</p>
+                    </div>
+
+                    <div class="error-banner" id="registerError" role="alert"></div>
+
+                    <form id="registerForm" novalidate>
+                        <div class="field">
+                            <label for="regName">Full name</label>
+                            <div class="input-wrap">
+                                <input type="text" id="regName" name="name" placeholder="Your full name" autocomplete="name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="regEmail">Email</label>
+                            <div class="input-wrap">
+                                <input type="email" id="regEmail" name="email" placeholder="you@nu.edu.pk" autocomplete="email" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="regPassword">Password</label>
+                            <div class="input-wrap has-toggle">
+                                <input type="password" id="regPassword" name="password" placeholder="At least 8 characters with one digit" autocomplete="new-password" required>
+                                <button type="button" class="pw-toggle" data-target="regPassword" aria-label="Show password">
+                                    <svg class="eye-on" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>
+                                    <svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6.5 0-10-7-10-7a19.5 19.5 0 0 1 4.06-4.94" /><path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c6.5 0 10 7 10 7a19.46 19.46 0 0 1-2.16 3.19" /><line x1="2" y1="2" x2="22" y2="22" /><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" /></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>I am a...</label>
+                            <div class="role-picker">
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="CLIENT" checked>
+                                    <div class="role-card">
+                                        <div class="role-name">Client</div>
+                                        <div class="role-desc">I want to hire freelancers</div>
+                                    </div>
+                                </label>
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="FREELANCER">
+                                    <div class="role-card">
+                                        <div class="role-name">Freelancer</div>
+                                        <div class="role-desc">I want to offer my skills</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="registerBtn">Create account</button>
+                    </form>
+
+                    <div class="auth-foot">
+                        Already have an account? <a data-switch="login">Sign in</a>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // SkillBridge auth page logic
+        //
+        // Endpoints (already wired in HttpServer.cpp):
+        //   POST /api/register  -> {name, email, password, role}
+        //                          returns 201 {token, user}
+        //   POST /api/login     -> {email, password}
+        //                          returns 200 {token, user}
+        //   GET  /api/me        -> Authorization: Bearer <token>
+        //                          returns 200 (response shape verified
+        //                          when /browse.html exists and tests run)
+        //
+        // Storage:
+        //   sessionStorage.sb_token = "<token>"
+        //   sessionStorage.sb_user  = JSON.stringify(user)
+        // ============================================================
+
+        const API_BASE = "";
+
+        // Email rule: at least one char before @, one char before the dot,
+        // one char after the dot. Loose, intentional.
+        const EMAIL_REGEX = /^.+@.+\..+$/;
+
+        // Password rule: matches backend - >= 8 chars and at least one digit.
+        function isPasswordValid(pw) {
+        return pw.length >= 8 && /\d/.test(pw);
+        }
+
+        // ---- Tab switching ----------------------------------------
+        function switchTab(target) {
+        document.querySelectorAll(".tab").forEach(t => {
+        const on = t.dataset.tab === target;
+        t.classList.toggle("on", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        document.querySelectorAll(".form-block").forEach(b => {
+        b.classList.toggle("on", b.dataset.block === target);
+        });
+        hideError("loginError");
+        hideError("registerError");
+        }
+        document.querySelectorAll(".tab").forEach(t => {
+        t.addEventListener("click", () => switchTab(t.dataset.tab));
+        });
+        document.querySelectorAll("[data-switch]").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();
+        switchTab(a.dataset.switch);
+        });
+        });
+
+        // ---- Show password toggle ---------------------------------
+        document.querySelectorAll(".pw-toggle").forEach(btn => {
+        btn.addEventListener("click", () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (!target) return;
+        const isPw = target.type === "password";
+        target.type = isPw ? "text" : "password";
+        btn.classList.toggle("shown", isPw);
+        btn.setAttribute("aria-label", isPw ? "Hide password" : "Show password");
+        });
+        });
+
+        // ---- Per-form error display -------------------------------
+        function showError(bannerId, msg) {
+        const el = document.getElementById(bannerId);
+        el.textContent = msg;
+        el.classList.add("show");
+        }
+        function hideError(bannerId) {
+        const el = document.getElementById(bannerId);
+        el.classList.remove("show");
+        el.textContent = "";
+        }
+
+        // ---- Button busy state ------------------------------------
+        function setBusy(btn, busy, busyText) {
+        if (busy) {
+        btn.dataset.originalText = btn.textContent;
+        btn.textContent = busyText;
+        btn.disabled = true;
+        } else {
+        btn.textContent = btn.dataset.originalText || btn.textContent;
+        btn.disabled = false;
+        }
+        }
+
+        // ---- Save session and redirect ----------------------------
+        function completeAuth(payload, errorBannerId) {
+        if (!payload || !payload.token || !payload.user) {
+        showError(errorBannerId, "Server returned an unexpected response. Please try again.");
+        return;
+        }
+        sessionStorage.setItem("sb_token", payload.token);
+        sessionStorage.setItem("sb_user", JSON.stringify(payload.user));
+        window.location.href = "/browse.html";
+        }
+
+        // ---- API helper -------------------------------------------
+        async function apiCall(path, body, opts = {}) {
+        const headers = { "Content-Type": "application/json" };
+        if (opts.token) headers["Authorization"] = "Bearer " + opts.token;
+
+        let res;
+        try {
+        res = await fetch(API_BASE + path, {
+        method: opts.method || "POST",
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+        });
+        } catch (networkErr) {
+        throw new Error("Cannot reach the server. Is it running?");
+        }
+
+        let data = null;
+        try { data = await res.json(); } catch (_) { /* may be empty */ }
+
+        if (!res.ok) {
+        const msg = (data && data.error) ? data.error : ("Request failed (" + res.status + ")");
+        const err = new Error(msg);
+        err.status = res.status;
+        throw err;
+        }
+        return data;
+        }
+
+        // ---- Auto-redirect if already signed in -------------------
+        async function checkExistingSession() {
+        const token = sessionStorage.getItem("sb_token");
+        if (!token) return;
+        try {
+        const data = await apiCall("/api/me", null, { method: "GET", token });
+        sessionStorage.setItem("sb_user", JSON.stringify(data.user || data));
+        window.location.href = "/browse.html";
+        } catch (e) {
+        sessionStorage.removeItem("sb_token");
+        sessionStorage.removeItem("sb_user");
+        }
+        }
+
+        // ---- Login submit -----------------------------------------
+        const loginForm = document.getElementById("loginForm");
+        const loginBtn  = document.getElementById("loginBtn");
+
+        loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideError("loginError");
+
+        const email    = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+
+        if (!email || !password) {
+        showError("loginError", "Please enter your email and password.");
+        return;
+        }
+        if (!EMAIL_REGEX.test(email)) {
+        showError("loginError", "Please enter a valid email address.");
+        return;
+        }
+
+        setBusy(loginBtn, true, "Signing in...");
+        try {
+        const data = await apiCall("/api/login", { email, password });
+        completeAuth(data, "loginError");
+        } catch (err) {
+        showError("loginError", err.message);
+        setBusy(loginBtn, false);
+        }
+        });
+
+        // ---- Register submit --------------------------------------
+        const registerForm = document.getElementById("registerForm");
+        const registerBtn  = document.getElementById("registerBtn");
+
+        registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideError("registerError");
+
+        const name     = document.getElementById("regName").value.trim();
+        const email    = document.getElementById("regEmail").value.trim();
+        const password = document.getElementById("regPassword").value;
+        const role     = document.querySelector('input[name="role"]:checked').value;
+
+        if (!name || !email || !password) {
+        showError("registerError", "Please fill in all the fields.");
+        return;
+        }
+        if (!EMAIL_REGEX.test(email)) {
+        showError("registerError", "Please enter a valid email address.");
+        return;
+        }
+        if (!isPasswordValid(password)) {
+        showError("registerError", "Password must be at least 8 characters and contain at least one digit.");
+        return;
+        }
+
+        setBusy(registerBtn, true, "Creating account...");
+        try {
+        const data = await apiCall("/api/register", { name, email, password, role });
+        completeAuth(data, "registerError");
+        } catch (err) {
+        showError("registerError", err.message);
+        setBusy(registerBtn, false);
+        }
+        });
+
+        checkExistingSession();
+    </script>
+
 </body>
 </html>

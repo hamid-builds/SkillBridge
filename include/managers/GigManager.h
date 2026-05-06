@@ -6,12 +6,12 @@
 #include "ITextRanker.h"
 #include "IFuzzyMatcher.h"
 #include "InvertedIndex.h"
-#include "AutocompleteTrie.h"
-#include "HashMap.h"
-#include "DataList.h"
-#include "Gig.h"
-#include "GigCategory.h"
-#include "GigBrowseFilter.h"
+#include "utils/AutocompleteTrie.h"
+#include "utils/HashMap.h"
+#include "utils/DataList.h"
+#include "core/Gig.h"
+#include "core/GigCategory.h"
+#include "core/GigBrowseFilter.h"
 #include <string>
 
 
