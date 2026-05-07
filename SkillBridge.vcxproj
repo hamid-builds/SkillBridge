@@ -274,11 +274,13 @@
     <None Include="public\js\gig-edit.js" />
     <None Include="public\js\gig.js" />
     <None Include="public\js\messages.js" />
+    <None Include="public\js\my-gigs.js" />
     <None Include="public\js\orders.js" />
     <None Include="public\js\profile.js" />
     <None Include="public\js\search.js" />
     <None Include="public\js\shared.js" />
     <None Include="public\messages.html" />
+    <None Include="public\my-gigs.html" />
     <None Include="public\orders.html" />
     <None Include="public\profile.html" />
     <None Include="public\search.html" />

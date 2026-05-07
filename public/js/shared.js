@@ -250,8 +250,26 @@
 
    mount.innerHTML = html;
     wireAvatarMenu();
-    wireUnreadBadge();
+     refreshBalance();
   };
+
+  function refreshBalance() {
+    SB.api('/api/me').then(function (data) {
+      if (!data || !data.user) return;
+      var old = SB.getUser();
+      if (!old) return;
+      old.balance = data.user.balance;
+      sessionStorage.setItem('sb_user', JSON.stringify(old));
+      var chips = document.querySelectorAll('.balance-chip');
+      chips.forEach(function (chip) {
+        chip.innerHTML = 'Balance &middot; <b>Rs ' + SB.formatBalance(data.user.balance) + '</b>';
+      });
+      var menuBal = document.querySelectorAll('.menu-balance');
+      menuBal.forEach(function (el) {
+        el.innerHTML = 'Balance &middot; <b>Rs ' + SB.formatBalance(data.user.balance) + '</b>';
+      });
+    }).catch(function () { });
+  }
 
   function wireUnreadBadge() {
     var token = SB.getToken();

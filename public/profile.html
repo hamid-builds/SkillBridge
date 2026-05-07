@@ -565,6 +565,21 @@
                         <h2>Account settings</h2>
                     </div>
 
+                    <div class="glass-card section-card" id="depositSection" hidden>
+                        <h3>Add balance</h3>
+                        <p style="color:var(--text-dim);font-size:13px;line-height:1.55;margin-bottom:16px;">
+                            Add funds to your account to place orders. Current balance is shown in the navigation bar.
+                        </p>
+                        <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+                            <div class="field" style="flex:1;min-width:160px;">
+                                <label for="depositAmt">Amount (Rs)</label>
+                                <input id="depositAmt" type="number" min="1" max="1000000" step="1" placeholder="e.g. 500">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="btnDeposit" style="margin-bottom:1px;">Add funds</button>
+                        </div>
+                        <div class="error-banner" id="depositErrBanner" style="margin-top:10px;"></div>
+                    </div>
+
                     <!-- Edit profile -->
                     <div class="glass-card section-card">
                         <h3>Profile details</h3>

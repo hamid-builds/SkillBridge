@@ -67,6 +67,7 @@ public:
 
     bool deleteAccountForUser(int userID, const std::string& plaintextPassword);
 
+    bool depositForUser(int userID, double amount);
 
     User* getCurrentUser() const 
     {

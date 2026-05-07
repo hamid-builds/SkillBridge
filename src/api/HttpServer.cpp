@@ -127,7 +127,7 @@ namespace sb {
                 try {
                     size_t pos = 0;
                     long long v = std::stoll(s, &pos);
-                    if (pos != s.size()) return false; 
+                    if (pos != s.size()) return false;
                     if (v <= 0 || v > 2147483647LL) return false;
                     out = static_cast<int>(v);
                     return true;
@@ -413,6 +413,45 @@ namespace sb {
                     }
                     catch (const std::invalid_argument& e) {
                         sendError(res, 400, e.what());
+                    }
+                    catch (const SkillBridgeException& e) {
+                        sendError(res, 500, e.what());
+                    }
+                    catch (const std::exception& e) {
+                        sendError(res, 500,
+                            std::string("unexpected error: ") + e.what());
+                    }
+                });
+
+
+            // ----- GET /api/gigs/mine --------------------------------------------
+            impl_->server.Get("/api/gigs/mine",
+                [this](const httplib::Request& req, httplib::Response& res) {
+                    int userID = requireAuth(req, res);
+                    if (userID < 0) return;
+
+                    try {
+                        DataList<Gig> gigs =
+                            ctx_.gigManager->findGigsByOwner(userID);
+
+                        std::string fName;
+                        double fRating;
+                        lookupFreelancerForCard(
+                            ctx_.userManager, userID, fName, fRating);
+
+                        nlohmann::json arr = nlohmann::json::array();
+                        for (int i = 0; i < gigs.size(); ++i) {
+                            const Gig& g = gigs.get(i);
+                            nlohmann::json card =
+                                sb::api::toBrowseCardJson(g, fName, fRating);
+                            card["isActive"] = g.getIsActive();
+                            arr.push_back(card);
+                        }
+
+                        nlohmann::json out;
+                        out["gigs"] = arr;
+                        out["count"] = gigs.size();
+                        sendJson(res, out, 200);
                     }
                     catch (const SkillBridgeException& e) {
                         sendError(res, 500, e.what());
@@ -1156,6 +1195,53 @@ namespace sb {
                     }
                     catch (const AuthenticationException& e) {
                         sendError(res, 401, e.what());
+                    }
+                    catch (const SkillBridgeException& e) {
+                        sendError(res, 500, e.what());
+                    }
+                    catch (const nlohmann::json::exception&) {
+                        sendError(res, 400, "invalid JSON in request body");
+                    }
+                    catch (const std::exception& e) {
+                        sendError(res, 500,
+                            std::string("unexpected error: ") + e.what());
+                    }
+                });
+
+            // ----- POST /api/me/deposit ------------------------------------------
+            impl_->server.Post("/api/me/deposit",
+                [this](const httplib::Request& req, httplib::Response& res) {
+                    int userID = requireAuth(req, res);
+                    if (userID < 0) return;
+
+                    try {
+                        auto body = nlohmann::json::parse(req.body);
+
+                        double amount = 0.0;
+                        if (body.contains("amount") && body["amount"].is_number()) {
+                            amount = body["amount"].get<double>();
+                        }
+
+                        std::lock_guard<std::mutex> dbLock(
+                            DatabaseManager::getInstance().getWriteMutex());
+
+                        ctx_.userManager->depositForUser(userID, amount);
+
+                        std::unique_ptr<User> updated(
+                            ctx_.userManager->findUserByID(userID));
+
+                        nlohmann::json out;
+                        if (updated) {
+                            out["balance"] = updated->getBalance();
+                        }
+                        out["ok"] = true;
+                        sendJson(res, out, 200);
+                    }
+                    catch (const ValidationException& e) {
+                        sendError(res, 400, e.what());
+                    }
+                    catch (const UnauthorizedException& e) {
+                        sendError(res, 403, e.what());
                     }
                     catch (const SkillBridgeException& e) {
                         sendError(res, 500, e.what());
@@ -2326,15 +2412,15 @@ namespace sb {
                             out["count"] = static_cast<int>(arr.size());
                             sendJson(res, out, 200);
                         }
-                        catch (const UnauthorizedException& e) 
+                        catch (const UnauthorizedException& e)
                         {
                             sendError(res, 403, e.what());
                         }
-                        catch (const SkillBridgeException& e) 
+                        catch (const SkillBridgeException& e)
                         {
                             sendError(res, 500, e.what());
                         }
-                        catch (const std::exception& e) 
+                        catch (const std::exception& e)
                         {
                             sendError(res, 500,
                                 std::string("unexpected error: ") + e.what());
@@ -2343,43 +2429,43 @@ namespace sb {
 
             // ----- DELETE /api/admin/reviews/:id ---------------------------------
             impl_->server.Delete(R"(/api/admin/reviews/(\d+))",
-                [this, requireAdmin](const httplib::Request& req, httplib::Response& res) 
+                [this, requireAdmin](const httplib::Request& req, httplib::Response& res)
                 {
-                        int adminID = requireAdmin(req, res);
-                        if (adminID < 0) 
+                    int adminID = requireAdmin(req, res);
+                    if (adminID < 0)
+                        return;
+
+                    try
+                    {
+                        int reviewID = 0;
+                        if (!parsePositiveInt(req.matches[1], reviewID))
+                        {
+                            sendError(res, 400, "invalid review id");
                             return;
-
-                        try 
-                        {
-                            int reviewID = 0;
-                            if (!parsePositiveInt(req.matches[1], reviewID)) 
-                            {
-                                sendError(res, 400, "invalid review id");
-                                return;
-                            }
-
-                            std::lock_guard<std::mutex> dbLock(DatabaseManager::getInstance().getWriteMutex());
-
-                            ctx_.reviewManager->adminDeleteReview(adminID, reviewID);
-
-                            nlohmann::json out;
-                            out["ok"] = true;
-                            sendJson(res, out, 200);
                         }
-                        catch (const UnauthorizedException& e) 
-                        {
-                            sendError(res, 403, e.what());
-                        }
-                        catch (const SkillBridgeException& e) 
-                        {
-                            sendError(res, 404, e.what());
-                        }
-                        catch (const std::exception& e) 
-                        {
-                            sendError(res, 500, std::string("unexpected error: ") + e.what());
-                        }
+
+                        std::lock_guard<std::mutex> dbLock(DatabaseManager::getInstance().getWriteMutex());
+
+                        ctx_.reviewManager->adminDeleteReview(adminID, reviewID);
+
+                        nlohmann::json out;
+                        out["ok"] = true;
+                        sendJson(res, out, 200);
+                    }
+                    catch (const UnauthorizedException& e)
+                    {
+                        sendError(res, 403, e.what());
+                    }
+                    catch (const SkillBridgeException& e)
+                    {
+                        sendError(res, 404, e.what());
+                    }
+                    catch (const std::exception& e)
+                    {
+                        sendError(res, 500, std::string("unexpected error: ") + e.what());
+                    }
                 });
         }
 
     }
-} 
+}

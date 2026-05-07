@@ -440,3 +440,36 @@ bool UserManager::deleteAccountForUser(int userID,
     delete u;
     return repo_->deleteUser(userID);
 }
+
+bool UserManager::depositForUser(int userID, double amount) {
+    if (amount <= 0.0) {
+        throw ValidationException("deposit amount must be positive");
+    }
+    if (amount > 1000000.0) {
+        throw ValidationException(
+            "deposit amount exceeds maximum (Rs. 1,000,000)");
+    }
+
+    User* u = repo_->findUserByID(userID);
+    if (!u) {
+        throw AuthenticationException(
+            "user not found: id=" + to_string(userID));
+    }
+
+    if (u->getRole() != UserRole::CLIENT) {
+        delete u;
+        throw UnauthorizedException("only clients can deposit funds");
+    }
+
+    u->deposit(amount);
+    if (!repo_->updateUser(u)) {
+        u->withdraw(amount);
+        delete u;
+        throw DatabaseException(
+            "failed to persist deposit for userID=" + to_string(userID));
+    }
+
+    double newBalance = u->getBalance();
+    delete u;
+    return true;
+}

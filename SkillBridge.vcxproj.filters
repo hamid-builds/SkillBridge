@@ -397,5 +397,7 @@
     <None Include="public\orders.html" />
     <None Include="public\profile.html" />
     <None Include="public\search.html" />
+    <None Include="public\js\my-gigs.js" />
+    <None Include="public\my-gigs.html" />
   </ItemGroup>
 </Project>

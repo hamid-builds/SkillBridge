@@ -424,6 +424,12 @@
     els.acSec.hidden = false;
     els.acName.value = u.name || '';
 
+    var depositSec = document.getElementById('depositSection');
+    if (u.role === 'CLIENT' && depositSec) {
+      depositSec.hidden = false;
+      document.getElementById('btnDeposit').addEventListener('click', onDeposit);
+    }
+
     if (isFreelancer) {
       els.acPortfolioWrap.hidden = false;
       els.acSkillsWrap.hidden = false;
@@ -524,6 +530,57 @@
       .then(function () {
         els.btnChangePw.disabled = false;
         els.btnChangePw.textContent = 'Change password';
+      });
+  }
+
+  function onDeposit() {
+    var banner = document.getElementById('depositErrBanner');
+    hideBanner(banner);
+
+    var input = document.getElementById('depositAmt');
+    var amt = parseFloat(input.value);
+    if (!amt || amt <= 0) {
+      showBanner(banner, 'Enter a positive amount.');
+      return;
+    }
+    if (amt > 1000000) {
+      showBanner(banner, 'Maximum deposit is Rs 1,000,000.');
+      return;
+    }
+
+    var btn = document.getElementById('btnDeposit');
+    btn.disabled = true;
+    btn.textContent = 'Adding...';
+
+    SB.api('/api/me/deposit', {
+      method: 'POST',
+      body: { amount: amt }
+    })
+      .then(function (data) {
+        SB.toast('Rs ' + SB.formatBalance(amt) + ' added to your balance.');
+        input.value = '';
+        if (data && typeof data.balance === 'number') {
+          var u = SB.getUser();
+          if (u) {
+            u.balance = data.balance;
+            SB.setSession(SB.getToken(), u);
+          }
+          var chips = document.querySelectorAll('.balance-chip');
+          chips.forEach(function (c) {
+            c.innerHTML = 'Balance &middot; <b>Rs ' + SB.formatBalance(data.balance) + '</b>';
+          });
+          var menuBal = document.querySelectorAll('.menu-balance');
+          menuBal.forEach(function (c) {
+            c.innerHTML = 'Balance &middot; <b>Rs ' + SB.formatBalance(data.balance) + '</b>';
+          });
+        }
+      })
+      .catch(function (err) {
+        showBanner(banner, err && err.message ? err.message : 'Could not add funds.');
+      })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = 'Add funds';
       });
   }
 

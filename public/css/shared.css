@@ -1,3 +1,11 @@
+/* =========================================================================
+   SkillBridge - Shared Stylesheet
+   Locked design system: Mockup B v2 Light Emerald
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   DESIGN TOKENS
+   ------------------------------------------------------------------------- */
 :root {
     --bg-0: #f7f5ef;
     --bg-1: #fefdfa;
@@ -18,19 +26,28 @@
     --success: #0f6e54;
 }
 
+/* -------------------------------------------------------------------------
+   RESET + BASE
+   ------------------------------------------------------------------------- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html {
+    background: var(--bg-0);
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100svh;
+}
+
+body {
     background: var(--bg-0);
     color: var(--text);
     font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
     min-height: 100vh;
     min-height: 100svh;
     font-size: 14px;
@@ -59,6 +76,10 @@ img {
     display: block;
 }
 
+/* -------------------------------------------------------------------------
+   BODY DECORATION (sunrise gradient + grain noise)
+   Exact tokens from the locked mockup.
+   ------------------------------------------------------------------------- */
 body::before {
     content: "";
     position: fixed;
@@ -79,15 +100,24 @@ body::after {
     mix-blend-mode: multiply;
 }
 
+/* -------------------------------------------------------------------------
+   PAGE WRAPPER (max-width pulled in from the mockup)
+   The wrap is centered with a max-width of 1380px. All page content lives
+   inside it. The nav is also inside the wrap so it always aligns with the
+   hero, filters, and grid below it. No matter how wide the screen.
+   ------------------------------------------------------------------------- */
 .wrap {
     position: relative;
     z-index: 1;
     max-width: 1380px;
     margin: 0 auto;
     padding: 24px 40px 80px;
+    min-height: 100vh;
 }
 
-
+/* -------------------------------------------------------------------------
+   TYPOGRAPHY HELPERS
+   ------------------------------------------------------------------------- */
 .eyebrow {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
@@ -139,6 +169,10 @@ body::after {
     color: var(--text-faint);
 }
 
+/* -------------------------------------------------------------------------
+   NAVBAR (floating glass pill, lives INSIDE .wrap)
+   Per locked Mockup B v2. Not a sticky bar; it scrolls with the page.
+   ------------------------------------------------------------------------- */
 .nav {
     display: flex;
     justify-content: space-between;
@@ -151,6 +185,8 @@ body::after {
     border-radius: 16px;
     margin-bottom: 56px;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 4px 24px rgba(31, 42, 38, 0.04);
+    position: relative;
+    z-index: 50;
 }
 
 .logo {
@@ -244,6 +280,7 @@ body::after {
         font-weight: 600;
     }
 
+/* Avatar + dropdown */
 .avatar-wrap {
     position: relative;
 }
@@ -351,6 +388,7 @@ body::after {
     margin: 4px 0;
 }
 
+/* Mobile balance row inside avatar dropdown (shows when nav-chip is hidden) */
 .avatar-menu .menu-balance {
     padding: 10px 14px;
     font-family: 'Geist Mono', monospace;
@@ -363,6 +401,9 @@ body::after {
         color: var(--accent);
     }
 
+/* -------------------------------------------------------------------------
+   GLASS CARD (used for gig cards, content panels, etc.)
+   ------------------------------------------------------------------------- */
 .glass-card {
     background: rgba(254, 253, 250, 0.6);
     backdrop-filter: blur(20px) saturate(180%);
@@ -384,6 +425,10 @@ body::after {
             box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 16px 48px rgba(31, 42, 38, 0.10), 0 0 0 1px var(--accent-glow);
         }
 
+/* -------------------------------------------------------------------------
+   SEARCH BAR (the big horizontal pill below the hero)
+   This is the MAIN search experience. Locked from the mockup.
+   ------------------------------------------------------------------------- */
 .search-bar {
     margin-bottom: 36px;
     display: flex;
@@ -396,7 +441,8 @@ body::after {
     border-radius: 14px;
     padding: 8px 8px 8px 18px;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 4px 20px rgba(31, 42, 38, 0.04);
-    position: relative; 
+    position: relative; /* for autocomplete dropdown */
+    z-index: 10;
 }
 
     .search-bar > svg {
@@ -444,6 +490,7 @@ body::after {
             box-shadow: 0 6px 20px var(--accent-glow);
         }
 
+/* Autocomplete dropdown anchored under the search bar */
 .autocomplete {
     position: absolute;
     top: calc(100% + 6px);
@@ -459,7 +506,7 @@ body::after {
     overflow-y: auto;
     display: none;
     padding: 6px;
-    z-index: 40;
+    z-index: 50;
 }
 
     .autocomplete.show {
@@ -493,11 +540,17 @@ body::after {
         flex-shrink: 0;
     }
 
+/* -------------------------------------------------------------------------
+   CATEGORY PILLS (filter chips above the section header)
+   Active = dark text background (locked from mockup).
+   ------------------------------------------------------------------------- */
 .pills {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 40px;
+    position: relative;
+    z-index: 0;
 }
 
     .pills button {
@@ -527,6 +580,9 @@ body::after {
             border-color: var(--text);
         }
 
+/* -------------------------------------------------------------------------
+   SECTION HEADER (h2 with count + sort segmented control on the right)
+   ------------------------------------------------------------------------- */
 .sec-head {
     display: flex;
     justify-content: space-between;
@@ -584,6 +640,9 @@ body::after {
             font-weight: 600;
         }
 
+/* -------------------------------------------------------------------------
+   BUTTONS (general purpose)
+   ------------------------------------------------------------------------- */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -640,7 +699,9 @@ body::after {
         color: var(--text);
     }
 
-
+/* -------------------------------------------------------------------------
+   FORM ELEMENTS (used on profile, create-gig, etc.)
+   ------------------------------------------------------------------------- */
 .field {
     display: flex;
     flex-direction: column;
@@ -686,6 +747,9 @@ body::after {
         min-height: 80px;
     }
 
+/* -------------------------------------------------------------------------
+   ERROR BANNER + TOAST
+   ------------------------------------------------------------------------- */
 .error-banner {
     background: var(--error-soft);
     border: 1px solid rgba(196, 82, 58, 0.25);
@@ -762,6 +826,9 @@ body::after {
         animation: toastFade .25s ease-in forwards;
     }
 
+/* -------------------------------------------------------------------------
+   ANIMATIONS
+   ------------------------------------------------------------------------- */
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -803,6 +870,9 @@ body::after {
     }
 }
 
+/* -------------------------------------------------------------------------
+   SKELETON LOADER
+   ------------------------------------------------------------------------- */
 .skeleton {
     background: linear-gradient(90deg, rgba(31, 42, 38, 0.04) 0%, rgba(31, 42, 38, 0.08) 50%, rgba(31, 42, 38, 0.04) 100%);
     background-size: 200% 100%;
@@ -810,6 +880,14 @@ body::after {
     border-radius: 6px;
 }
 
+/* =========================================================================
+   RESPONSIVE BREAKPOINTS
+   The .wrap padding shrinks at smaller sizes. The nav collapses links into
+   "icons only" then to a hamburger overflow. Search bar always stays the
+   full width of .wrap.
+   ========================================================================= */
+
+/* Tablet */
 @media (max-width: 959px) {
     .wrap {
         padding: 20px 28px 64px;
@@ -838,6 +916,7 @@ body::after {
     }
 }
 
+/* Smaller tablet / large phone */
 @media (max-width: 759px) {
     .nav-links {
         gap: 16px;
@@ -846,7 +925,7 @@ body::after {
         .nav-links a {
             font-size: 12px;
         }
-
+    /* Hide balance chip from nav; surface it inside avatar dropdown instead. */
     .balance-chip {
         display: none;
     }
@@ -866,6 +945,7 @@ body::after {
         }
 }
 
+/* Phone */
 @media (max-width: 599px) {
     .wrap {
         padding: 16px 16px 48px;
@@ -877,7 +957,7 @@ body::after {
         flex-wrap: wrap;
         gap: 10px;
     }
-
+    /* Move nav-links below logo+avatar row at small sizes */
     .nav-links {
         order: 99;
         flex-basis: 100%;
@@ -924,6 +1004,7 @@ body::after {
     }
 }
 
+/* Very small phones (iPhone SE, etc.) */
 @media (max-width: 379px) {
     .wrap {
         padding: 12px 12px 40px;
@@ -943,6 +1024,7 @@ body::after {
     }
 }
 
+/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -950,6 +1032,15 @@ body::after {
     }
 }
 
+/* =========================================================================
+   APPENDED FOR STEP 6.2.5 — SHARED CARD / GRID / EMPTY-STATE STYLES
+   Hoisted from browse.html so search.html (and future pages) can reuse.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   GIG GRID
+   Three columns on desktop, two on tablet, one on phone.
+   ------------------------------------------------------------------------- */
 .gig-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -969,6 +1060,11 @@ body::after {
     }
 }
 
+/* -------------------------------------------------------------------------
+   GIG CARD
+   Used on browse, search, profile, my-gigs, gig-detail (related gigs), etc.
+   The card itself uses .glass-card.interactive from above for the chrome.
+   ------------------------------------------------------------------------- */
 .gig-card {
     display: flex;
     flex-direction: column;
@@ -1084,6 +1180,11 @@ body::after {
         flex-shrink: 0;
     }
 
+/* -------------------------------------------------------------------------
+   EMPTY STATE
+   Centered icon + heading + dim sub + optional CTA.
+   Used by browse, search, my-gigs, orders, messages, etc.
+   ------------------------------------------------------------------------- */
 .empty-state {
     text-align: center;
     padding: 80px 24px 40px;
@@ -1125,12 +1226,16 @@ body::after {
         line-height: 1.5;
     }
 
-    .skel-card {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+/* -------------------------------------------------------------------------
+   SKELETON CARD
+   The shimmer-driven placeholder shown while a gig grid is loading.
+   ------------------------------------------------------------------------- */
+.skel-card {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
     .skel-card .s1 {
         width: 60px;
@@ -1143,20 +1248,17 @@ body::after {
         margin-top: 4px;
     }
 
-    .skel-card .s3 
-    {
+    .skel-card .s3 {
         width: 100%;
         height: 12px;
     }
 
-    .skel-card .s4 
-    {
+    .skel-card .s4 {
         width: 60%;
         height: 12px;
     }
 
-    .skel-card .s5 
-    {
+    .skel-card .s5 {
         height: 38px;
         margin-top: 14px;
         border-top: 1px solid var(--line);
@@ -1168,21 +1270,47 @@ body::after {
         gap: 10px;
     }
 
-    .skel-card .s5 .a 
-    {
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
+        .skel-card .s5 .a {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+        }
+
+        .skel-card .s5 .n {
+            flex: 1;
+            height: 12px;
+        }
+
+        .skel-card .s5 .p {
+            width: 60px;
+            height: 14px;
+        }
+
+/* -------------------------------------------------------------------------
+   BACK LINK (reusable across pages)
+   ------------------------------------------------------------------------- */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    padding: 6px 0;
+    transition: color .15s;
+}
+
+    .back-link:hover {
+        color: var(--text);
     }
 
-    .skel-card .s5 .n 
-    {
-        flex: 1;
-        height: 12px;
-    }
-
-    .skel-card .s5 .p 
-    {
-        width: 60px;
+    .back-link svg {
+        width: 14px;
         height: 14px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
     }
